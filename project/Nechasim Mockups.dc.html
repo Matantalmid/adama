@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/organic-c33250af-4e0b-42b0-8619-95d9c567b44a/styles.css">
+<script src="_ds/organic-c33250af-4e0b-42b0-8619-95d9c567b44a/_ds_bundle.js"></script>
+<script src="./image-slot.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Secular+One&amp;family=Assistant:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{--font-body:"Figtree","Assistant",system-ui,sans-serif;--font-heading:"Caprasimo","Secular One",system-ui,sans-serif}
+body{margin:0;background:var(--color-neutral-300);font-family:var(--font-body)}
+a{color:var(--color-accent)}a:hover{color:var(--color-accent-700)}
+[dir=rtl] .table th{text-align:right}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.tag,.seg-opt,.seg{white-space:nowrap;flex:none}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}
+.dv-card{max-width:100%;background:var(--color-bg);border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}
+.dv-intro{max-width:760px;font:13px/1.55 system-ui,sans-serif;color:rgba(0,0,0,.7)}
+.dv-intro p{margin:0 0 8px}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t0">
+<div class="dv-thd"><a class="dv-tid" href="#t0">0</a><span class="dv-tname">הנחות והקשר</span></div>
+<div class="dv-intro" dir="rtl">
+<p><b>משתמש:</b> משקיע יחיד, 1–10 נכסים (בתים פרטיים ודופלקסים), BRRRR ו-Fix &amp; Flip. ממשק בעברית (RTL), מונחים פיננסיים באנגלית. דסקטופ + מובייל.</p>
+<p><b>סבב 1 — שלושת המסכים שביקשת קודם:</b> דשבורד תיק, דף נכס, הוצאות פרויקט. לכל מסך 2 גישות לדסקטופ + גרסת מובייל. המחשבונים, ההשוואה ו-ARV בסבב הבא, אחרי שתעלה את טבלת החישובים שלך.</p>
+<p><b>מערכת עיצוב:</b> Organic — קרם, טרקוטה, מרווה, פינות מעוגלות. Caprasimo/Figtree אינם תומכים בעברית — הוספתי Secular One (כותרות) ו-Assistant (גוף) כגיבוי, האנגלית נשארת בפונטים המקוריים.</p>
+<p><b>נתונים:</b> 6 נכסים לדוגמה בקליבלנד, ממפיס, אינדיאנפוליס ובירמינגהם. <span class="num">70% rule = ARV × 0.7 − rehab</span>. תמונות — שטחי הנחה (אפשר לגרור תמונה).</p>
+</div>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">דשבורד תיק נכסים · דף נכס · הוצאות פרויקט</span></div>
+<div class="dv-opts">
+
+<!-- ═══════════ 1a Dashboard — classic table ═══════════ -->
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>דשבורד — KPI + טבלה + "דורש תשומת לב"</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="1a Dashboard">
+<nav class="nav" style="padding:14px 32px">
+  <span class="nav-brand" style="margin:0;margin-inline-end:auto;display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-accent)"></span>אדמה</span>
+  <a href="#" aria-current="page">דשבורד</a><a href="#">נכסים</a><a href="#">מחשבונים</a><a href="#">השוואה</a><a href="#">ARV</a>
+  <button type="button" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>נכס חדש</button>
+</nav>
+<div style="padding:8px 32px 36px;display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+    <div><h1 style="margin:0 0 4px;font-size:36px">בוקר טוב, יואב</h1><p class="text-muted" style="margin:0;font-size:14px">6 נכסים · 2 בשיפוץ · 1 בריפיננס · ספטמבר 2026</p></div>
+    <div class="seg"><label class="seg-opt"><input type="radio" name="a-range" checked>החודש</label><label class="seg-opt"><input type="radio" name="a-range">רבעון</label><label class="seg-opt"><input type="radio" name="a-range">שנה</label></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+    <div class="card" style="padding:18px 22px"><div class="card-kicker">שווי תיק · ARV</div><div style="font-family:var(--font-heading);font-size:34px;line-height:1"><span class="num">$1.02M</span></div><div class="card-meta"><span class="tag tag-accent-2">+4.8%</span>מול רבעון קודם</div></div>
+    <div class="card" style="padding:18px 22px"><div class="card-kicker">הון עצמי · Equity</div><div style="font-family:var(--font-heading);font-size:34px;line-height:1"><span class="num">$386K</span></div><div class="card-meta">LTV ממוצע 62%</div></div>
+    <div class="card" style="padding:18px 22px"><div class="card-kicker">תזרים חודשי · Cash Flow</div><div style="font-family:var(--font-heading);font-size:34px;line-height:1;color:var(--color-accent-2-700)"><span class="num">+$1,204</span></div><div class="card-meta">2 נכסים מושכרים</div></div>
+    <div class="card" style="padding:18px 22px;background:var(--color-accent-100)"><div class="card-kicker">הוצאות החודש</div><div style="font-family:var(--font-heading);font-size:34px;line-height:1;color:var(--color-accent-800)"><span class="num">$18,650</span></div><div class="card-meta"><span class="tag tag-accent">4 קבלות ללא קטגוריה</span></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start">
+    <div class="card" style="padding:8px 20px 12px;gap:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px"><h4 style="margin:0">הנכסים שלי</h4><a href="#" style="font-size:13px">כל הנכסים</a></div>
+      <table class="table" style="font-size:13.5px">
+        <thead><tr><th>נכס</th><th>אסטרטגיה</th><th>סטטוס</th><th>All-in</th><th>ARV</th><th style="width:170px">תקציב שיפוץ</th><th>רווח צפוי</th></tr></thead>
+        <tbody>
+          <tr><td><div style="font-weight:600"><span class="num">4412 Elm Ave</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · 3/1 · 1,240 sqft</div></td><td>BRRRR</td><td><span class="tag tag-accent">בשיפוץ</span></td><td class="num">$127,400</td><td class="num">$165,000</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:77%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="font-size:11px">77%</span></div></td><td class="num" style="color:var(--color-accent-2-700);font-weight:600">$37,600</td></tr>
+          <tr><td><div style="font-weight:600"><span class="num">1808 Faxon Ave</span></div><div class="text-muted" style="font-size:11.5px">Memphis, TN · דופלקס · 1,900 sqft</div></td><td>Fix &amp; Flip</td><td><span class="tag tag-neutral">רשום למכירה</span></td><td class="num">$181,900</td><td class="num">$235,000</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:100%;height:100%;background:var(--color-accent-700);border-radius:999px"></div></div><span class="num" style="font-size:11px;color:var(--color-accent-700);font-weight:600">105%</span></div></td><td class="num" style="color:var(--color-accent-2-700);font-weight:600">$34,200</td></tr>
+          <tr><td><div style="font-weight:600"><span class="num">2231 N Olney St</span></div><div class="text-muted" style="font-size:11.5px">Indianapolis, IN · 3/2 · 1,410 sqft</div></td><td>BRRRR</td><td><span class="tag tag-accent-2">מושכר</span></td><td class="num">$109,200</td><td class="num">$158,000</td><td><span class="text-muted" style="font-size:12px">הושלם</span></td><td class="num" style="color:var(--color-accent-2-700);font-weight:600">+$318/חודש</td></tr>
+          <tr><td><div style="font-weight:600"><span class="num">3305 W 41st St</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · דופלקס · 2,100 sqft</div></td><td>BRRRR</td><td><span class="tag tag-outline">ריפיננס</span></td><td class="num">$143,800</td><td class="num">$198,000</td><td><span class="text-muted" style="font-size:12px">הושלם</span></td><td class="num" style="color:var(--color-accent-2-700);font-weight:600">$4,700 cash-out</td></tr>
+          <tr><td><div style="font-weight:600"><span class="num">916 47th St N</span></div><div class="text-muted" style="font-size:11.5px">Birmingham, AL · 2/1 · 980 sqft</div></td><td>Fix &amp; Flip</td><td><span class="tag tag-accent-2">נמכר</span></td><td class="num">$98,800</td><td class="num">$142,000</td><td><span class="text-muted" style="font-size:12px">—</span></td><td class="num" style="color:var(--color-accent-2-700);font-weight:600">$31,200 ✓</td></tr>
+          <tr><td><div style="font-weight:600"><span class="num">5107 Ridge Rd</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · 3/1 · 1,120 sqft</div></td><td>—</td><td><span class="tag tag-neutral">בחוזה</span></td><td class="num">$71,000</td><td class="num">$149,000</td><td><span class="text-muted" style="font-size:12px">טרם התחיל</span></td><td class="text-muted" style="font-size:12px">70% rule ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card" style="padding:18px 20px">
+        <div style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg><h4 style="margin:0">דורש תשומת לב</h4></div>
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-accent);margin-top:6px;flex:none"></span><div><div style="font-weight:600">הערכת שמאי — <span class="num">3305 W 41st</span></div><div class="text-muted">חמישי 18.9 · הכן רשימת שיפוצים ותמונות</div></div></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-accent);margin-top:6px;flex:none"></span><div><div style="font-weight:600">חשמל חורג מהתקציב — <span class="num">Elm Ave</span></div><div class="text-muted"><span class="num">$5,150</span> מול <span class="num">$4,800</span> · לעדכן תקציב?</div></div></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-neutral-500);margin-top:6px;flex:none"></span><div><div style="font-weight:600">4 קבלות ללא קטגוריה</div><div class="text-muted">Home Depot · Lowe's · Sherwin-Williams</div></div></div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-neutral-500);margin-top:6px;flex:none"></span><div><div style="font-weight:600">שכירות אוקטובר — <span class="num">Olney St</span></div><div class="text-muted">חוזה מתחדש ב-1.10 · <span class="num">$1,350</span></div></div></div>
+        </div>
+      </div>
+      <div class="card" style="padding:18px 20px;background:var(--color-accent-2-200)">
+        <div class="card-kicker" style="color:var(--color-accent-2-800)">Fix &amp; Flip · 2026</div>
+        <div style="font-family:var(--font-heading);font-size:28px;line-height:1"><span class="num">$65,400</span></div>
+        <div style="font-size:12.5px;color:var(--color-accent-2-900)">רווח ממומש + צפוי משתי עסקות · ROI ממוצע 19.4%</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<!-- ═══════════ 1b Dashboard — pipeline ═══════════ -->
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>דשבורד — צינור BRRRR: קנייה → שיפוץ → השכרה → ריפיננס → מכירה</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="1b Dashboard pipeline">
+<div style="display:grid;grid-template-columns:220px minmax(0,1fr);min-height:760px">
+  <aside style="background:var(--color-surface);padding:28px 22px;display:flex;flex-direction:column;gap:6px;border-radius:0 32px 32px 0">
+    <div style="font-family:var(--font-heading);font-size:22px;display:flex;align-items:center;gap:10px;margin-bottom:22px"><span style="width:30px;height:30px;border-radius:50%;background:var(--color-accent)"></span>אדמה</div>
+    <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:var(--color-accent);color:var(--color-bg);text-decoration:none;font-size:14px;font-weight:600"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>דשבורד</a>
+    <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>הוצאות</a>
+    <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>מחשבונים</a>
+    <a href="#" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:14px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>השוואה ו-ARV</a>
+    <div style="margin-top:auto" class="card"><div class="card-kicker">הוצאות החודש</div><div style="font-family:var(--font-heading);font-size:24px;line-height:1"><span class="num">$18,650</span></div><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:62%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><div class="card-meta">62% מתקציב ספטמבר</div></div>
+  </aside>
+  <main style="padding:28px 32px;display:flex;flex-direction:column;gap:26px">
+    <div style="display:flex;align-items:center;gap:28px">
+      <div style="flex:1"><h1 style="margin:0;font-size:38px">התיק שלי</h1><p class="text-muted" style="margin:4px 0 0">6 נכסים · לפי שלב</p></div>
+      <div style="display:flex;gap:10px">
+        <div style="width:150px;height:150px;border-radius:50%;background:var(--color-accent-2-300);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-2-900)">ARV תיק</div><div style="font-family:var(--font-heading);font-size:30px;line-height:1.05"><span class="num">$1.02M</span></div></div>
+        <div style="width:150px;height:150px;border-radius:50%;background:var(--color-accent-200);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-top:24px"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-accent-900)">Equity</div><div style="font-family:var(--font-heading);font-size:30px;line-height:1.05"><span class="num">$386K</span></div></div>
+        <div style="width:150px;height:150px;border-radius:50%;background:var(--color-surface);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center"><div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase" class="text-muted">Cash Flow</div><div style="font-family:var(--font-heading);font-size:30px;line-height:1.05;color:var(--color-accent-2-700)"><span class="num">+$1,204</span></div><div class="text-muted" style="font-size:11px">לחודש</div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--color-neutral-400);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700">1</span><span style="font-family:var(--font-heading);font-size:16px">קנייה</span><span class="text-muted" style="font-size:12px;margin-inline-start:auto">1</span></div>
+        <div class="card elev-sm" style="padding:14px 16px;gap:6px"><div style="font-weight:600;font-size:14px"><span class="num">5107 Ridge Rd</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · 3/1</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px"><span class="text-muted">מחיר</span><span class="num" style="font-weight:600">$71,000</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span class="text-muted">MAO 70%</span><span class="num">$77,500</span></div><span class="tag tag-accent-2" style="align-self:flex-start;margin-top:4px">מתחת ל-MAO ✓</span></div>
+        <button type="button" class="btn btn-secondary" style="font-size:12px;border-style:dashed">+ דיל חדש</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700">2</span><span style="font-family:var(--font-heading);font-size:16px">שיפוץ</span><span class="text-muted" style="font-size:12px;margin-inline-start:auto">2</span></div>
+        <div class="card elev-sm" style="padding:14px 16px;gap:6px;border:2px solid var(--color-accent-300)"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600;font-size:14px"><span class="num">4412 Elm Ave</span></div><span class="tag tag-accent">BRRRR</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · 3/1</div><div style="display:flex;align-items:center;gap:10px;margin-top:8px"><div style="position:relative;width:48px;height:48px;border-radius:50%;background:conic-gradient(var(--color-accent) 77%,var(--color-neutral-300) 0);display:grid;place-items:center;flex:none"><div style="width:36px;height:36px;border-radius:50%;background:var(--color-surface);display:grid;place-items:center;font-size:11px;font-weight:700" class="num">77%</div></div><div style="font-size:12px;line-height:1.4"><div><span class="num"><b>$29,400</b> <span class="text-muted">/ $38,000</span></span></div><div style="color:var(--color-accent-700)">חשמל חורג <span class="num">+$350</span></div></div></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px"><span class="text-muted">ARV</span><span class="num" style="font-weight:600">$165,000</span></div></div>
+        <div class="card elev-sm" style="padding:14px 16px;gap:6px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600;font-size:14px"><span class="num">1808 Faxon Ave</span></div><span class="tag tag-neutral">Flip</span></div><div class="text-muted" style="font-size:11.5px">Memphis, TN · דופלקס</div><div style="display:flex;align-items:center;gap:10px;margin-top:8px"><div style="position:relative;width:48px;height:48px;border-radius:50%;background:conic-gradient(var(--color-accent-700) 100%,var(--color-neutral-300) 0);display:grid;place-items:center;flex:none"><div style="width:36px;height:36px;border-radius:50%;background:var(--color-surface);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--color-accent-700)" class="num">105%</div></div><div style="font-size:12px;line-height:1.4"><div><span class="num"><b>$54,800</b> <span class="text-muted">/ $52,000</span></span></div><div class="text-muted">רשום ב-<span class="num">$239,900</span></div></div></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--color-accent-2);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700">3</span><span style="font-family:var(--font-heading);font-size:16px">השכרה</span><span class="text-muted" style="font-size:12px;margin-inline-start:auto">1</span></div>
+        <div class="card elev-sm" style="padding:14px 16px;gap:6px"><div style="font-weight:600;font-size:14px"><span class="num">2231 N Olney St</span></div><div class="text-muted" style="font-size:11.5px">Indianapolis, IN · 3/2</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px"><span class="text-muted">שכירות</span><span class="num" style="font-weight:600">$1,350</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span class="text-muted">הלוואה</span><span class="num">−$812</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span class="text-muted">הוצאות</span><span class="num">−$220</span></div><div style="display:flex;justify-content:space-between;font-size:13px;border-top:1px solid var(--color-divider);padding-top:6px;margin-top:2px"><span style="font-weight:600">Cash Flow</span><span class="num" style="font-weight:700;color:var(--color-accent-2-700)">+$318</span></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--color-accent-2-700);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700">4</span><span style="font-family:var(--font-heading);font-size:16px">ריפיננס</span><span class="text-muted" style="font-size:12px;margin-inline-start:auto">1</span></div>
+        <div class="card elev-sm" style="padding:14px 16px;gap:6px"><div style="font-weight:600;font-size:14px"><span class="num">3305 W 41st St</span></div><div class="text-muted" style="font-size:11.5px">Cleveland, OH · דופלקס</div><div style="background:var(--color-accent-100);border-radius:14px;padding:8px 10px;font-size:12px;margin-top:6px;color:var(--color-accent-900)">שמאי · חמישי 18.9</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span class="text-muted">ARV משוער</span><span class="num" style="font-weight:600">$198,000</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span class="text-muted">75% LTV</span><span class="num">$148,500</span></div><div style="display:flex;justify-content:space-between;font-size:12px"><span class="text-muted">Cash-out</span><span class="num" style="color:var(--color-accent-2-700);font-weight:600">+$4,700</span></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:var(--color-neutral-800);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700">5</span><span style="font-family:var(--font-heading);font-size:16px">נמכר</span><span class="text-muted" style="font-size:12px;margin-inline-start:auto">1</span></div>
+        <div class="card" style="padding:14px 16px;gap:6px;background:var(--color-accent-2-200)"><div style="font-weight:600;font-size:14px"><span class="num">916 47th St N</span></div><div style="font-size:11.5px;color:var(--color-accent-2-900)">Birmingham, AL · נמכר 6.2026</div><div style="font-family:var(--font-heading);font-size:26px;line-height:1;margin-top:8px;color:var(--color-accent-2-900)"><span class="num">$31,200</span></div><div style="font-size:12px;color:var(--color-accent-2-900)">רווח נקי · ROI 22% · 4.5 חודשים</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+</div></div>
+
+<!-- ═══════════ 1c Dashboard — mobile ═══════════ -->
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>דשבורד — מובייל</div>
+<div style="padding:6px"><x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" data-screen-label="1c Mobile dashboard" style="position:absolute;inset:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);display:flex;flex-direction:column;padding-top:62px">
+  <div style="flex:1;overflow:hidden;padding:8px 20px 0;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;align-items:center;justify-content:space-between"><div><h1 style="margin:0;font-size:28px">בוקר טוב, יואב</h1><div class="text-muted" style="font-size:13px">6 נכסים · 2 בשיפוץ</div></div><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent-2-300);display:grid;place-items:center;font-weight:700;color:var(--color-accent-2-900)">י</span></div>
+    <div style="display:flex;gap:10px;overflow:hidden;margin:0 -20px;padding:0 20px">
+      <div class="card" style="min-width:150px;padding:14px 16px;gap:4px"><div class="card-kicker">ARV תיק</div><div style="font-family:var(--font-heading);font-size:26px;line-height:1"><span class="num">$1.02M</span></div><div class="card-meta">+4.8%</div></div>
+      <div class="card" style="min-width:150px;padding:14px 16px;gap:4px"><div class="card-kicker">Cash Flow</div><div style="font-family:var(--font-heading);font-size:26px;line-height:1;color:var(--color-accent-2-700)"><span class="num">+$1,204</span></div><div class="card-meta">לחודש</div></div>
+      <div class="card" style="min-width:150px;padding:14px 16px;gap:4px;background:var(--color-accent-100)"><div class="card-kicker">הוצאות</div><div style="font-family:var(--font-heading);font-size:26px;line-height:1"><span class="num">$18.6K</span></div></div>
+    </div>
+    <div style="background:var(--color-accent-100);border-radius:22px;padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-700)" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div style="flex:1"><b>חשמל חורג</b> ב-<span class="num">Elm Ave</span> · <span class="num">+$350</span></div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h4 style="margin:0">נכסים</h4><a href="#" style="font-size:13px">הכל</a></div>
+      <div class="card" style="padding:14px 16px;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600"><span class="num">4412 Elm Ave</span></div><span class="tag tag-accent">בשיפוץ</span></div><div class="text-muted" style="font-size:12px">Cleveland · BRRRR · ARV <span class="num">$165K</span></div><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:77%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num" style="font-size:11px">$29.4K / $38K</span></div></div>
+      <div class="card" style="padding:14px 16px;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600"><span class="num">1808 Faxon Ave</span></div><span class="tag tag-neutral">רשום למכירה</span></div><div class="text-muted" style="font-size:12px">Memphis · Flip · רשום <span class="num">$239.9K</span></div><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:8px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:100%;height:100%;background:var(--color-accent-700);border-radius:999px"></div></div><span class="num" style="font-size:11px;color:var(--color-accent-700)">105%</span></div></div>
+      <div class="card" style="padding:14px 16px;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600"><span class="num">2231 N Olney St</span></div><span class="tag tag-accent-2">מושכר</span></div><div class="text-muted" style="font-size:12px">Indianapolis · BRRRR · <span class="num" style="color:var(--color-accent-2-700);font-weight:600">+$318</span> לחודש</div></div>
+      <div class="card" style="padding:14px 16px;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-weight:600"><span class="num">3305 W 41st St</span></div><span class="tag tag-outline">ריפיננס</span></div><div class="text-muted" style="font-size:12px">Cleveland · שמאי חמישי 18.9</div></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-around;padding:10px 12px 30px;background:var(--color-surface);border-radius:32px 32px 0 0">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--color-accent);font-weight:600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>דשבורד</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px" class="text-muted"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>הוצאות</div>
+    <div style="width:58px;height:58px;border-radius:50%;background:var(--color-accent);display:grid;place-items:center;color:var(--color-bg);margin-top:-30px;box-shadow:var(--shadow-md)"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px" class="text-muted"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>מחשבון</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px" class="text-muted"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>עוד</div>
+  </div>
+</div>
+</x-import></div></div>
+
+<!-- ═══════════ 2a Property — overview with tabs ═══════════ -->
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>דף נכס — סקירה: מספרי מפתח, תקציב מול ביצוע, ציר זמן, BRRRR מול Flip</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="2a Property overview">
+<nav class="nav" style="padding:14px 32px">
+  <span class="nav-brand" style="margin:0;margin-inline-end:auto;display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-accent)"></span>אדמה</span>
+  <a href="#">דשבורד</a><a href="#" aria-current="page">נכסים</a><a href="#">מחשבונים</a><a href="#">השוואה</a><a href="#">ARV</a>
+  <button type="button" class="btn btn-icon btn-secondary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+</nav>
+<div style="padding:4px 32px 36px;display:flex;flex-direction:column;gap:22px">
+  <div class="text-muted" style="font-size:12.5px">נכסים <span style="margin:0 6px">›</span> <span class="num">4412 Elm Ave</span></div>
+  <div style="display:grid;grid-template-columns:380px minmax(0,1fr);gap:28px;align-items:stretch">
+    <div style="position:relative;height:260px"><image-slot id="p-elm-hero" style="width:100%;height:100%" shape="rounded" radius="32" placeholder="תמונת חזית — 4412 Elm Ave" class="washed"></image-slot></div>
+    <div style="display:flex;flex-direction:column;gap:14px;justify-content:center">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag tag-accent">בשיפוץ · שבוע 6</span><span class="tag tag-neutral">BRRRR</span><span class="tag tag-neutral">Hard money · 10.5% · 2 pts</span></div>
+      <h1 style="margin:0;font-size:40px;direction:ltr;text-align:right">4412 Elm Ave</h1>
+      <div class="text-muted" style="font-size:14px;margin-top:-6px">Cleveland, OH 44113 · בית פרטי · 3 חד' · 1 אמבט · 1,240 sqft · נבנה 1924</div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:6px">
+        <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div class="text-muted" style="font-size:11px">מחיר קנייה</div><div class="num" style="font-family:var(--font-heading);font-size:20px">$82,000</div></div>
+        <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div class="text-muted" style="font-size:11px">תקציב שיפוץ</div><div class="num" style="font-family:var(--font-heading);font-size:20px">$38,000</div></div>
+        <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div class="text-muted" style="font-size:11px">All-in (צפוי)</div><div class="num" style="font-family:var(--font-heading);font-size:20px">$127,400</div></div>
+        <div style="background:var(--color-accent-2-200);border-radius:20px;padding:12px 14px"><div style="font-size:11px;color:var(--color-accent-2-900)">ARV · 5 comps</div><div class="num" style="font-family:var(--font-heading);font-size:20px;color:var(--color-accent-2-900)">$165,000</div></div>
+        <div style="background:var(--color-accent-100);border-radius:20px;padding:12px 14px"><div style="font-size:11px;color:var(--color-accent-900)">70% rule · MAO</div><div class="num" style="font-family:var(--font-heading);font-size:20px;color:var(--color-accent-800)">$77,500</div><div style="font-size:10.5px;color:var(--color-accent-800)">קנית מעל ב-<span class="num">$4,500</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:4px;border-bottom:1px solid var(--color-divider)">
+    <a href="#" style="padding:10px 16px;font-size:14px;font-weight:600;color:var(--color-accent);border-bottom:3px solid var(--color-accent);text-decoration:none;margin-bottom:-1px">סקירה</a>
+    <a href="#" style="padding:10px 16px;font-size:14px;color:inherit;text-decoration:none">הוצאות <span class="tag tag-neutral" style="font-size:10px;padding:1px 7px;margin-inline-start:4px">42</span></a>
+    <a href="#" style="padding:10px 16px;font-size:14px;color:inherit;text-decoration:none">BRRRR / Flip</a>
+    <a href="#" style="padding:10px 16px;font-size:14px;color:inherit;text-decoration:none">Comps &amp; ARV</a>
+    <a href="#" style="padding:10px 16px;font-size:14px;color:inherit;text-decoration:none">מסמכים</a>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:start">
+    <div class="card" style="padding:20px 24px;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><h4 style="margin:0">תקציב מול ביצוע</h4><div style="font-size:13px"><span class="num" style="font-weight:700">$29,400</span> <span class="text-muted">מתוך</span> <span class="num">$38,000</span> <span class="tag tag-accent-2" style="margin-inline-start:6px">נותרו <span class="num">$8,600</span></span></div></div>
+      <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 120px;gap:8px 14px;align-items:center;font-size:13px">
+        <span>גג</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:95%;height:100%;background:var(--color-accent-2);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">6,200 / 6,500</span>
+        <span>חשמל</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden;position:relative"><div style="width:100%;height:100%;background:var(--color-accent-700);border-radius:999px"></div></div><span class="num" style="text-align:left;color:var(--color-accent-700);font-weight:600">5,150 / 4,800</span>
+        <span>אינסטלציה</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:75%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">3,900 / 5,200</span>
+        <span>מטבח</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:84%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">7,600 / 9,000</span>
+        <span>רצפות</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:47%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">2,100 / 4,500</span>
+        <span>צבע</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:0%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">0 / 3,000</span>
+        <span>שונות</span><div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:89%;height:100%;background:var(--color-accent);border-radius:999px"></div></div><span class="num text-muted" style="text-align:left">4,450 / 5,000</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px"><button type="button" class="btn btn-primary" style="font-size:13px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>הוצאה</button><button type="button" class="btn btn-secondary" style="font-size:13px">עדכן תקציב חשמל</button></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card" style="padding:20px 24px;gap:0">
+        <h4 style="margin:0 0 12px">ציר זמן</h4>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:0 14px;font-size:13px">
+          <div style="display:flex;flex-direction:column;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:var(--color-accent-2);display:grid;place-items:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span style="width:2px;flex:1;background:var(--color-accent-2-300);min-height:22px"></span></div><div style="padding-bottom:14px"><b>קנייה</b> · 12.3.2026 <div class="text-muted">סגירה, Hard money <span class="num">$65,600</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center"><span style="width:22px;height:22px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 0 5px var(--color-accent-200)"></span><span style="width:2px;flex:1;background:var(--color-neutral-300);min-height:22px"></span></div><div style="padding-bottom:14px"><b>שיפוץ</b> · 20.3 → ~15.10 <div class="text-muted">שבוע 6 מתוך 8 · 77% מהתקציב</div></div>
+          <div style="display:flex;flex-direction:column;align-items:center"><span style="width:22px;height:22px;border-radius:50%;border:2px solid var(--color-neutral-400)"></span><span style="width:2px;flex:1;background:var(--color-neutral-300);min-height:22px"></span></div><div style="padding-bottom:14px" class="text-muted"><b style="color:var(--color-text)">השכרה</b> · יעד נובמבר <div>שכ"ד צפוי <span class="num">$1,450</span></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center"><span style="width:22px;height:22px;border-radius:50%;border:2px solid var(--color-neutral-400)"></span></div><div class="text-muted"><b style="color:var(--color-text)">ריפיננס</b> · 6 חודשי seasoning <div>DSCR 30 שנה · 75% LTV</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="padding:16px 18px;gap:4px;background:var(--color-accent-2-200)"><div class="card-kicker" style="color:var(--color-accent-2-800)">BRRRR</div><div class="num" style="font-family:var(--font-heading);font-size:24px;line-height:1;color:var(--color-accent-2-900)">$9,800</div><div style="font-size:12px;color:var(--color-accent-2-900)">מזומן שנשאר בעסקה · <span class="num">+$318</span>/חודש · CoC 39%</div></div>
+        <div class="card" style="padding:16px 18px;gap:4px"><div class="card-kicker">Fix &amp; Flip</div><div class="num" style="font-family:var(--font-heading);font-size:24px;line-height:1">$21,300</div><div style="font-size:12px" class="text-muted">רווח נקי · ROI 16.7% · החזקה 5 חודשים</div></div>
+      </div>
+      <a href="#" style="font-size:13px;align-self:flex-start">השוואה מלאה BRRRR מול Flip ›</a>
+    </div>
+  </div>
+</div>
+</div></div>
+
+<!-- ═══════════ 2b Property — deal sheet ═══════════ -->
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>דף נכס — "גיליון עסקה": ARV במרכז, ledger בצד, BRRRR מול Flip מלא</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="2b Property deal sheet">
+<div style="display:grid;grid-template-columns:220px minmax(0,1fr);min-height:820px">
+  <aside style="background:var(--color-surface);padding:28px 22px;display:flex;flex-direction:column;gap:6px;border-radius:0 32px 32px 0">
+    <div style="font-family:var(--font-heading);font-size:22px;display:flex;align-items:center;gap:10px;margin-bottom:22px"><span style="width:30px;height:30px;border-radius:50%;background:var(--color-accent)"></span>אדמה</div>
+    <div class="text-muted" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:0 14px 6px">נכסים</div>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;background:var(--color-accent);color:var(--color-bg);text-decoration:none;font-size:13.5px;font-weight:600"><span class="num">4412 Elm Ave</span></a>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:13.5px"><span class="num">1808 Faxon Ave</span></a>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:13.5px"><span class="num">2231 N Olney St</span></a>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:13.5px"><span class="num">3305 W 41st St</span></a>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:13.5px"><span class="num">916 47th St N</span></a>
+    <a href="#" style="display:block;padding:9px 14px;border-radius:999px;color:inherit;text-decoration:none;font-size:13.5px"><span class="num">5107 Ridge Rd</span></a>
+    <button type="button" class="btn btn-secondary" style="margin-top:10px;font-size:12.5px;border-style:dashed">+ נכס חדש</button>
+    <div style="margin-top:auto;position:relative;height:150px"><image-slot id="p-elm-side" style="width:100%;height:100%" shape="rounded" radius="28" placeholder="תמונה" class="washed"></image-slot></div>
+  </aside>
+  <main style="padding:30px 36px;display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+      <div><div style="display:flex;gap:8px;margin-bottom:8px"><span class="tag tag-accent">בשיפוץ</span><span class="tag tag-neutral">BRRRR</span></div><h1 style="margin:0;font-size:44px;direction:ltr;text-align:right">4412 Elm Ave</h1><div class="text-muted" style="font-size:14px">Cleveland, OH · 3/1 · 1,240 sqft · Hard money 10.5%</div></div>
+      <div style="display:flex;gap:8px"><button type="button" class="btn btn-secondary">ערוך</button><button type="button" class="btn btn-primary">הוסף הוצאה</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:0;font-size:13.5px">
+        <div class="text-muted" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding-bottom:8px">עלויות</div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>מחיר קנייה</span><span class="num">$82,000</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>סגירה</span><span class="num">$2,900</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>שיפוץ (תקציב)</span><span class="num">$38,000</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider);color:var(--color-accent-700)"><span>↳ בוצע עד כה</span><span class="num">$29,400</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>החזקה · 7 חודשים</span><span class="num">$4,500</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>נקודות + ריבית</span><span class="num">$5,180</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:700;font-size:15px"><span>All-in</span><span class="num">$132,580</span></div>
+        <div class="text-muted" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:18px 0 8px">מימון</div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>Hard money · 80% LTC</span><span class="num">$96,000</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--color-divider)"><span>הון עצמי בעסקה</span><span class="num">$36,580</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>שכ"ד צפוי</span><span class="num">$1,450 / חודש</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;align-items:center;gap:28px">
+          <div style="width:210px;height:210px;border-radius:50%;background:var(--color-accent-2-300);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;flex:none"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-2-900)">ARV</div><div class="num" style="font-family:var(--font-heading);font-size:40px;line-height:1;color:var(--color-accent-2-900)">$165K</div><div style="font-size:12px;color:var(--color-accent-2-900);margin-top:4px">5 comps · <span class="num">$133</span>/sqft</div></div>
+          <div style="display:flex;flex-direction:column;gap:12px;flex:1">
+            <div style="display:flex;align-items:center;gap:14px"><div style="width:76px;height:76px;border-radius:50%;background:var(--color-accent-200);display:grid;place-items:center;text-align:center;flex:none"><div><div style="font-size:9.5px;letter-spacing:.08em;color:var(--color-accent-900)">MAO</div><div class="num" style="font-family:var(--font-heading);font-size:16px;color:var(--color-accent-900)">$77.5K</div></div></div><div style="font-size:13px"><b>70% rule:</b> קנית ב-<span class="num">$82,000</span>, <span class="num">$4,500</span> מעל ה-MAO. <span class="text-muted">עדיין עובד כ-BRRRR בגלל שכ"ד גבוה — לא כ-Flip נקי.</span></div></div>
+            <div style="display:flex;align-items:center;gap:14px"><div style="width:76px;height:76px;border-radius:50%;background:var(--color-surface);display:grid;place-items:center;text-align:center;flex:none"><div><div style="font-size:9.5px;letter-spacing:.08em" class="text-muted">All-in / ARV</div><div class="num" style="font-family:var(--font-heading);font-size:16px">80%</div></div></div><div style="font-size:13px">יעד ריפיננס 75% LTV → <span class="num">$123,750</span>. <span class="text-muted">נשארים בעסקה ~<span class="num">$9,800</span>.</span></div></div>
+          </div>
+        </div>
+        <div class="card" style="padding:0;gap:0;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;font-size:13.5px">
+            <div style="padding:14px 20px;font-family:var(--font-heading);font-size:17px">BRRRR מול Flip</div>
+            <div style="padding:14px 20px;background:var(--color-accent-2-200);font-family:var(--font-heading);font-size:17px;color:var(--color-accent-2-900)">BRRRR ✓</div>
+            <div style="padding:14px 20px;font-family:var(--font-heading);font-size:17px">Fix &amp; Flip</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">מזומן שנשאר בעסקה</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100);font-weight:600">$9,800</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider)">—</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">Cash Flow חודשי</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100);font-weight:600;color:var(--color-accent-2-800)">+$318</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider)">—</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">רווח נקי במכירה</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100)">—</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);font-weight:600">$21,300</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">Cash-on-Cash / ROI</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100);font-weight:600">39%</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider)">16.7%</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">Equity אחרי ריפיננס</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100)">$41,250</div><div class="num" style="padding:9px 20px;border-top:1px solid var(--color-divider)">—</div>
+            <div style="padding:9px 20px;border-top:1px solid var(--color-divider)" class="text-muted">זמן עד למזומן</div><div style="padding:9px 20px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100)">~13 חודשים</div><div style="padding:9px 20px;border-top:1px solid var(--color-divider)">~5 חודשים</div>
+            <div style="padding:9px 20px 14px;border-top:1px solid var(--color-divider)" class="text-muted">מס</div><div style="padding:9px 20px 14px;border-top:1px solid var(--color-divider);background:var(--color-accent-2-100)">רווח הון נדחה</div><div style="padding:9px 20px 14px;border-top:1px solid var(--color-divider)">רגיל · קצר טווח</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</div></div>
+
+<!-- ═══════════ 2c Property — mobile ═══════════ -->
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>דף נכס — מובייל</div>
+<div style="padding:6px"><x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" data-screen-label="2c Mobile property" style="position:absolute;inset:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);display:flex;flex-direction:column;padding-top:56px;overflow:hidden">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 16px 8px"><button type="button" class="btn btn-icon btn-secondary" style="width:36px;height:36px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button><span style="font-size:13px;font-weight:600">נכס</span><button type="button" class="btn btn-icon btn-secondary" style="width:36px;height:36px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button></div>
+  <div style="flex:1;overflow:hidden;padding:0 16px;display:flex;flex-direction:column;gap:14px">
+    <div style="position:relative;height:170px"><image-slot id="p-elm-mobile" style="width:100%;height:100%" shape="rounded" radius="28" placeholder="תמונת חזית" class="washed"></image-slot></div>
+    <div><div style="display:flex;gap:6px;margin-bottom:6px"><span class="tag tag-accent">בשיפוץ · שבוע 6</span><span class="tag tag-neutral">BRRRR</span></div><h1 style="margin:0;font-size:28px;direction:ltr;text-align:right">4412 Elm Ave</h1><div class="text-muted" style="font-size:12.5px">Cleveland, OH · 3/1 · 1,240 sqft</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--color-accent-2-200);border-radius:20px;padding:12px 14px"><div style="font-size:11px;color:var(--color-accent-2-900)">ARV</div><div class="num" style="font-family:var(--font-heading);font-size:22px;color:var(--color-accent-2-900)">$165,000</div></div>
+      <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div class="text-muted" style="font-size:11px">All-in צפוי</div><div class="num" style="font-family:var(--font-heading);font-size:22px">$127,400</div></div>
+      <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div class="text-muted" style="font-size:11px">רווח BRRRR</div><div class="num" style="font-family:var(--font-heading);font-size:22px;color:var(--color-accent-2-700)">+$318<span style="font-size:12px">/חודש</span></div></div>
+      <div style="background:var(--color-accent-100);border-radius:20px;padding:12px 14px"><div style="font-size:11px;color:var(--color-accent-900)">MAO 70%</div><div class="num" style="font-family:var(--font-heading);font-size:22px;color:var(--color-accent-800)">$77,500</div></div>
+    </div>
+    <div class="card" style="padding:14px 16px;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-size:14px">שיפוץ</b><span style="font-size:12px"><span class="num"><b>$29,400</b> <span class="text-muted">/ $38,000</span></span></span></div>
+      <div style="height:10px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:77%;height:100%;background:var(--color-accent);border-radius:999px"></div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px"><span class="tag tag-accent">חשמל +$350</span><span class="tag tag-accent-2">גג ✓</span><span class="tag tag-neutral">צבע — טרם</span></div>
+    </div>
+    <div style="display:flex;gap:8px"><button type="button" class="btn btn-primary" style="flex:1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>צלם קבלה</button><button type="button" class="btn btn-secondary" style="flex:1">BRRRR / Flip</button></div>
+  </div>
+</div>
+</x-import></div></div>
+
+<!-- ═══════════ 3a Expenses — table ═══════════ -->
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>הוצאות — טבלה עם קבלות, סינון וסיכום קטגוריות</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="3a Expenses table">
+<nav class="nav" style="padding:14px 32px">
+  <span class="nav-brand" style="margin:0;margin-inline-end:auto;display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;border-radius:50%;background:var(--color-accent)"></span>אדמה</span>
+  <a href="#">דשבורד</a><a href="#" aria-current="page">נכסים</a><a href="#">מחשבונים</a><a href="#">השוואה</a><a href="#">ARV</a>
+</nav>
+<div style="padding:4px 32px 36px;display:flex;flex-direction:column;gap:20px">
+  <div class="text-muted" style="font-size:12.5px">נכסים › <span class="num">4412 Elm Ave</span> › <span style="color:var(--color-text)">הוצאות</span></div>
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+    <div><h1 style="margin:0;font-size:34px">הוצאות · <span style="direction:ltr;unicode-bidi:isolate">4412 Elm Ave</span></h1><p class="text-muted" style="margin:4px 0 0;font-size:14px">42 הוצאות · 38 קבלות · 4 ללא קטגוריה</p></div>
+    <div style="display:flex;gap:8px"><button type="button" class="btn btn-secondary">ייצא CSV</button><button type="button" class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>הוצאה</button></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px">
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px;border:2px solid var(--color-accent)"><div style="font-size:11px" class="text-muted">הכל</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$29,400</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:77%;height:100%;background:var(--color-accent)"></div></div></div>
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div style="font-size:11px" class="text-muted">גג</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$6,200</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:95%;height:100%;background:var(--color-accent-2)"></div></div></div>
+    <div style="background:var(--color-accent-100);border-radius:20px;padding:12px 14px"><div style="font-size:11px;color:var(--color-accent-900)">חשמל · חורג</div><div class="num" style="font-family:var(--font-heading);font-size:19px;color:var(--color-accent-800)">$5,150</div><div style="height:5px;border-radius:999px;background:var(--color-accent-300);margin-top:6px;overflow:hidden"><div style="width:100%;height:100%;background:var(--color-accent-700)"></div></div></div>
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div style="font-size:11px" class="text-muted">אינסטלציה</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$3,900</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:75%;height:100%;background:var(--color-accent)"></div></div></div>
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div style="font-size:11px" class="text-muted">מטבח</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$7,600</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:84%;height:100%;background:var(--color-accent)"></div></div></div>
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div style="font-size:11px" class="text-muted">רצפות</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$2,100</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:47%;height:100%;background:var(--color-accent)"></div></div></div>
+    <div style="background:var(--color-surface);border-radius:20px;padding:12px 14px"><div style="font-size:11px" class="text-muted">שונות</div><div class="num" style="font-family:var(--font-heading);font-size:19px">$4,450</div><div style="height:5px;border-radius:999px;background:var(--color-neutral-300);margin-top:6px;overflow:hidden"><div style="width:89%;height:100%;background:var(--color-accent)"></div></div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="position:relative;width:280px"><input class="input" placeholder="חפש ספק, תיאור, סכום…"></div>
+    <div class="seg"><label class="seg-opt"><input type="radio" name="a-view" checked>כל ההוצאות</label><label class="seg-opt"><input type="radio" name="a-view">לפי ספק</label><label class="seg-opt"><input type="radio" name="a-view">לפי שלב</label></div>
+    <span class="tag tag-accent" style="cursor:pointer">ללא קטגוריה · 4</span>
+    <span class="tag tag-outline" style="cursor:pointer">ללא קבלה · 4</span>
+  </div>
+  <div class="card" style="padding:4px 20px 8px;gap:0">
+    <table class="table" style="font-size:13.5px">
+      <thead><tr><th style="width:90px">תאריך</th><th>תיאור</th><th>ספק</th><th>קטגוריה</th><th>תשלום</th><th style="text-align:left">סכום</th><th style="width:70px">קבלה</th></tr></thead>
+      <tbody>
+        <tr style="background:var(--color-accent-100)"><td class="num text-muted">10.9</td><td>חומרי חשמל — שקעים, כבלים</td><td>Home Depot</td><td><span class="tag tag-outline" style="cursor:pointer">+ בחר קטגוריה</span></td><td class="text-muted">Amex ····4021</td><td class="num" style="text-align:left;font-weight:600">$1,284.50</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)" class="washed"></span></td></tr>
+        <tr><td class="num text-muted">9.9</td><td>עבודת חשמלאי — פאנל חדש <span class="num">200A</span></td><td>R. Alvarez Electric</td><td><span class="tag tag-accent">חשמל</span></td><td class="text-muted">Zelle</td><td class="num" style="text-align:left;font-weight:600">$2,400.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+        <tr><td class="num text-muted">8.9</td><td>ארונות מטבח — סט 10'</td><td>Lowe's</td><td><span class="tag tag-neutral">מטבח</span></td><td class="text-muted">Amex ····4021</td><td class="num" style="text-align:left;font-weight:600">$3,120.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+        <tr><td class="num text-muted">5.9</td><td>אינסטלציה — קווי PEX, ברזים</td><td>Ferguson</td><td><span class="tag tag-neutral">אינסטלציה</span></td><td class="text-muted">Amex ····4021</td><td class="num" style="text-align:left;font-weight:600">$860.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+        <tr><td class="num text-muted">4.9</td><td>צבע פנים — 12 גלון</td><td>Sherwin-Williams</td><td><span class="tag tag-outline" style="cursor:pointer">+ בחר קטגוריה</span></td><td class="text-muted">Visa ····8810</td><td class="num" style="text-align:left;font-weight:600">$412.80</td><td><span class="text-muted" style="font-size:11px">אין</span></td></tr>
+        <tr><td class="num text-muted">2.9</td><td>LVP רצפה — 620 sqft</td><td>Floor &amp; Decor</td><td><span class="tag tag-neutral">רצפות</span></td><td class="text-muted">Amex ····4021</td><td class="num" style="text-align:left;font-weight:600">$2,100.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+        <tr><td class="num text-muted">28.8</td><td>מכולת פסולת — 20 yd</td><td>Waste Mgmt</td><td><span class="tag tag-neutral">שונות</span></td><td class="text-muted">Visa ····8810</td><td class="num" style="text-align:left;font-weight:600">$495.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+        <tr><td class="num text-muted">22.8</td><td>גג — תשלום סופי</td><td>Lakeview Roofing</td><td><span class="tag tag-accent-2">גג</span></td><td class="text-muted">צ'ק #1042</td><td class="num" style="text-align:left;font-weight:600">$3,100.00</td><td><span style="display:inline-block;width:34px;height:42px;border-radius:8px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span></td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="5" style="padding:12px 9px;font-weight:600;border:0">8 מתוך 42 · סה"כ מוצג</td><td class="num" style="text-align:left;font-weight:700;border:0;padding:12px 9px">$13,772.30</td><td style="border:0"></td></tr></tfoot>
+    </table>
+  </div>
+</div>
+</div></div>
+
+<!-- ═══════════ 3b Expenses — timeline by phase ═══════════ -->
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>הוצאות — ציר זמן לפי שלבי שיפוץ, תקציב לשלב, קבלות כתמונות</div>
+<div class="dv-card" style="width:1180px" dir="rtl" data-screen-label="3b Expenses timeline">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:780px">
+  <main style="padding:30px 36px;display:flex;flex-direction:column;gap:22px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between"><div><div class="text-muted" style="font-size:12.5px;margin-bottom:6px"><span class="num">4412 Elm Ave</span> · הוצאות</div><h1 style="margin:0;font-size:36px">לפי שלבי השיפוץ</h1></div><div class="seg"><label class="seg-opt"><input type="radio" name="b-view">טבלה</label><label class="seg-opt"><input type="radio" name="b-view" checked>ציר זמן</label></div></div>
+    <div style="display:grid;grid-template-columns:36px minmax(0,1fr);gap:0 18px">
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:36px;height:36px;border-radius:50%;background:var(--color-accent-2);display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span style="width:3px;flex:1;background:var(--color-accent-2-300)"></span></div>
+      <div style="padding-bottom:22px"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px"><h4 style="margin:0">הריסה ופינוי</h4><span class="text-muted" style="font-size:12px">20.3 – 2.4</span><span class="num" style="margin-inline-start:auto;font-size:13px"><b>$1,890</b> <span class="text-muted">/ $2,000</span></span></div><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden;margin-bottom:10px"><div style="width:94%;height:100%;background:var(--color-accent-2)"></div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag tag-neutral">מכולת פסולת · <span class="num">$495</span></span><span class="tag tag-neutral">פועלים 3 ימים · <span class="num">$1,200</span></span><span class="tag tag-neutral">כלים · <span class="num">$195</span></span></div></div>
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:36px;height:36px;border-radius:50%;background:var(--color-accent-2);display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span style="width:3px;flex:1;background:var(--color-accent-2-300)"></span></div>
+      <div style="padding-bottom:22px"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px"><h4 style="margin:0">גג</h4><span class="text-muted" style="font-size:12px">3.4 – 18.4 · Lakeview Roofing</span><span class="num" style="margin-inline-start:auto;font-size:13px"><b>$6,200</b> <span class="text-muted">/ $6,500</span></span></div><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden;margin-bottom:10px"><div style="width:95%;height:100%;background:var(--color-accent-2)"></div></div><div style="display:flex;gap:10px;align-items:center"><span style="width:44px;height:54px;border-radius:10px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span><span style="width:44px;height:54px;border-radius:10px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span><span class="tag tag-neutral">מקדמה · <span class="num">$3,100</span></span><span class="tag tag-neutral">תשלום סופי · <span class="num">$3,100</span></span></div></div>
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:36px;height:36px;border-radius:50%;background:var(--color-accent);box-shadow:0 0 0 6px var(--color-accent-200)"></span><span style="width:3px;flex:1;background:var(--color-neutral-300)"></span></div>
+      <div style="padding-bottom:22px"><div class="card elev-sm" style="padding:16px 20px;gap:10px;border:2px solid var(--color-accent-300)"><div style="display:flex;align-items:baseline;gap:12px"><h4 style="margin:0">חשמל + אינסטלציה</h4><span class="text-muted" style="font-size:12px">19.4 – עכשיו</span><span class="num" style="margin-inline-start:auto;font-size:13px"><b style="color:var(--color-accent-700)">$9,050</b> <span class="text-muted">/ $10,000</span></span></div><div style="display:grid;grid-template-columns:70px 1fr 110px;gap:6px 12px;font-size:12.5px;align-items:center"><span>חשמל</span><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:100%;height:100%;background:var(--color-accent-700)"></div></div><span class="num" style="text-align:left;color:var(--color-accent-700);font-weight:600">5,150 / 4,800</span><span>אינסטלציה</span><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden"><div style="width:75%;height:100%;background:var(--color-accent)"></div></div><span class="num text-muted" style="text-align:left">3,900 / 5,200</span></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="width:44px;height:54px;border-radius:10px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span><span style="width:44px;height:54px;border-radius:10px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span><span style="width:44px;height:54px;border-radius:10px;background:var(--color-neutral-200);border:1px solid var(--color-divider)"></span><span class="tag tag-accent">פאנל 200A · <span class="num">$2,400</span></span><span class="tag tag-outline">Home Depot · <span class="num">$1,284</span> · ללא קטגוריה</span><span class="tag tag-neutral">Ferguson · <span class="num">$860</span></span></div><div style="background:var(--color-accent-100);border-radius:14px;padding:8px 12px;font-size:12.5px;color:var(--color-accent-900)">הפאנל החדש לא היה בתקציב המקורי. להעביר <span class="num">$350</span> מ"שונות" או לעדכן תקציב?</div></div></div>
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:36px;height:36px;border-radius:50%;background:var(--color-accent-400)"></span><span style="width:3px;flex:1;background:var(--color-neutral-300)"></span></div>
+      <div style="padding-bottom:22px"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px"><h4 style="margin:0">מטבח ורצפות</h4><span class="text-muted" style="font-size:12px">התחיל 2.9</span><span class="num" style="margin-inline-start:auto;font-size:13px"><b>$9,700</b> <span class="text-muted">/ $13,500</span></span></div><div style="height:6px;border-radius:999px;background:var(--color-neutral-300);overflow:hidden;margin-bottom:10px"><div style="width:72%;height:100%;background:var(--color-accent)"></div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag tag-neutral">ארונות · <span class="num">$3,120</span></span><span class="tag tag-neutral">LVP 620 sqft · <span class="num">$2,100</span></span><span class="tag tag-neutral">שיש · <span class="num">$2,850</span></span><span class="tag tag-neutral">התקנה · <span class="num">$1,630</span></span></div></div>
+      <div style="display:flex;flex-direction:column;align-items:center"><span style="width:36px;height:36px;border-radius:50%;border:2.5px solid var(--color-neutral-400)"></span></div>
+      <div class="text-muted"><div style="display:flex;align-items:baseline;gap:12px"><h4 style="margin:0;color:var(--color-text)">צבע וגמר</h4><span style="font-size:12px">יעד אוקטובר</span><span class="num" style="margin-inline-start:auto;font-size:13px">$0 / $3,000</span></div></div>
+    </div>
+  </main>
+  <aside style="background:var(--color-surface);padding:30px 26px;display:flex;flex-direction:column;gap:20px;border-radius:32px 0 0 32px">
+    <div><div class="card-kicker">סה"כ שיפוץ</div><div class="num" style="font-family:var(--font-heading);font-size:40px;line-height:1">$29,400</div><div class="text-muted" style="font-size:13px">מתוך <span class="num">$38,000</span> · נותרו <span class="num" style="color:var(--color-accent-2-700);font-weight:600">$8,600</span></div></div>
+    <div style="display:flex;height:22px;border-radius:999px;overflow:hidden;gap:2px"><span style="width:21%;background:var(--color-accent-2)"></span><span style="width:17.5%;background:var(--color-accent-700)"></span><span style="width:13%;background:var(--color-accent)"></span><span style="width:26%;background:var(--color-accent-400)"></span><span style="width:7%;background:var(--color-accent-300)"></span><span style="width:15.5%;background:var(--color-neutral-400)"></span></div>
+    <div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px 10px;font-size:12.5px;align-items:center">
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-2)"></span><span>גג</span><span class="num">$6,200</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-700)"></span><span>חשמל</span><span class="num">$5,150</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent)"></span><span>אינסטלציה</span><span class="num">$3,900</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-400)"></span><span>מטבח</span><span class="num">$7,600</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-accent-300)"></span><span>רצפות</span><span class="num">$2,100</span>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--color-neutral-400)"></span><span>שונות</span><span class="num">$4,450</span>
+    </div>
+    <div class="card" style="background:var(--color-bg);padding:16px 18px;gap:6px"><div class="card-kicker">תחזית סיום</div><div style="font-size:13.5px">בקצב הנוכחי השיפוץ יסתיים ב-<b><span class="num">$38,900</span></b> — <span style="color:var(--color-accent-700)">חריגה של <span class="num">$900</span></span> (2.4%). רווח BRRRR צפוי נשאר <span class="num">+$310</span>/חודש.</div></div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px"><button type="button" class="btn btn-primary btn-block" style="margin:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>הוסף הוצאה</button><button type="button" class="btn btn-secondary btn-block" style="margin:0">גרור קבלות לכאן</button></div>
+  </aside>
+</div>
+</div></div>
+
+<!-- ═══════════ 3c Expenses — mobile quick add ═══════════ -->
+<div class="dv-opt" id="3c"><div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>הוצאות — מובייל: צילום קבלה → סכום + קטגוריה</div>
+<div style="padding:6px"><x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div dir="rtl" data-screen-label="3c Mobile receipt capture" style="position:absolute;inset:0;background:var(--color-neutral-900);color:var(--color-text);font-family:var(--font-body);display:flex;flex-direction:column;overflow:hidden">
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:70px 40px 380px"><div style="width:100%;height:100%;border:2px dashed rgba(255,255,255,.4);border-radius:24px;display:grid;place-items:center;color:rgba(255,255,255,.8);font-size:13px;text-align:center"><div><div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;margin:0 auto 10px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>קבלה נסרקה ✓<br><span style="opacity:.7">Home Depot · 10.9.2026</span></div></div></div>
+  <div style="margin-top:auto;background:var(--color-bg);border-radius:36px 36px 0 0;padding:14px 20px 34px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow-lg)">
+    <div style="width:44px;height:5px;border-radius:999px;background:var(--color-neutral-400);margin:0 auto"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0;font-size:22px">הוצאה חדשה</h3><span class="tag tag-accent-2">זוהה אוטומטית</span></div>
+    <div style="text-align:center;padding:6px 0"><div class="text-muted" style="font-size:12px">סכום</div><div class="num" style="font-family:var(--font-heading);font-size:48px;line-height:1">$1,284.50</div><div class="text-muted" style="font-size:12.5px;margin-top:4px">Home Depot · Amex ····4021</div></div>
+    <div class="field"><label>נכס</label><div class="input" style="display:flex;align-items:center;justify-content:space-between"><span><span class="num">4412 Elm Ave</span> · בשיפוץ</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div></div>
+    <div class="field"><label>קטגוריה</label><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag" style="background:var(--color-accent);color:var(--color-bg);padding:7px 14px;font-size:13px">חשמל</span><span class="tag tag-neutral" style="padding:7px 14px;font-size:13px">אינסטלציה</span><span class="tag tag-neutral" style="padding:7px 14px;font-size:13px">מטבח</span><span class="tag tag-neutral" style="padding:7px 14px;font-size:13px">רצפות</span><span class="tag tag-neutral" style="padding:7px 14px;font-size:13px">צבע</span><span class="tag tag-neutral" style="padding:7px 14px;font-size:13px">שונות</span><span class="tag tag-outline" style="padding:7px 14px;font-size:13px">+</span></div></div>
+    <div style="background:var(--color-accent-100);border-radius:16px;padding:10px 14px;font-size:12.5px;color:var(--color-accent-900)">חשמל יעמוד על <span class="num">$5,150</span> מתוך <span class="num">$4,800</span> — חריגה של <span class="num">$350</span>.</div>
+    <div style="display:flex;gap:8px"><button type="button" class="btn btn-secondary" style="flex:1">ערוך פרטים</button><button type="button" class="btn btn-primary" style="flex:2">שמור הוצאה</button></div>
+  </div>
+</div>
+</x-import></div></div>
+
+</div>
+<p class="dv-next">נסה: "אהבתי את <a class="dv-oid" href="#1b">1b</a> עם הטבלה של <a class="dv-oid" href="#1a">1a</a>" · "הצג את <a class="dv-oid" href="#3b">3b</a> במובייל" · "עכשיו המחשבונים — הנה הטבלה שלי"</p>
+</section>
+</x-dc>
+</body>
+</html>
