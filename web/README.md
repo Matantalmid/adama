@@ -13,6 +13,7 @@ npm install
 npm run dev        # http://localhost:3000
 npm run build
 npm run typecheck
+npm test           # pins lib/calc.ts to the investor's spreadsheet
 ```
 
 Next.js 16 (App Router) + React 19 + TypeScript. No CSS framework — the Organic
@@ -21,26 +22,84 @@ design system is plain CSS, exactly as it was designed.
 ## What is implemented
 
 Round 1 of the design covered three screens, each with two desktop approaches
-and a phone layout. The **a** variants were chosen, with the phone artboards
-implemented as breakpoints of the same screens rather than separate components.
+and a phone layout; the **a** variants were chosen, with the phone artboards
+implemented as breakpoints of the same screens. Round 2 added the calculator
+the brief centred on, built on the investor's own spreadsheet, and a store so
+the screens can change things.
 
-| Screen | Route | From mockup |
+| Screen | Route | From |
 | --- | --- | --- |
-| Portfolio dashboard | `/` | 1a desktop, 1c phone |
+| Portfolio dashboard | `/` | mockup 1a desktop, 1c phone |
 | Properties list | `/properties` | the dashboard's "כל הנכסים" destination |
 | Property overview | `/properties/[id]` | 2a desktop, 2c phone |
 | Project expenses | `/properties/[id]/expenses` | 3a desktop, phone list |
-| Receipt capture | modal, from the phone tab bar's camera | 3c |
+| **BRRRR vs Fix & Flip calculator** | `/calculators`, `/properties/[id]/calculator` | 2b's matrix and circles; formulas from the spreadsheet |
+| New expense — scanned or manual | phone camera button; "+ הוצאה" on the ledger | 3c |
 
-Not implemented, because they were not designed — the transcript defers them to
-the next round, pending the user's own calculation spreadsheet: the BRRRR and
-Fix & Flip calculators, property comparison, and ARV/comps. Their routes exist
-(`/calculators`, `/compare`, `/arv`, `/more`, `/properties/new`) and say so,
-rather than leaving the navigation in the mockups pointing at dead links.
+Not yet built, because they were not designed: property comparison (six axes
+including a map), the ARV/comps finder, and the add‑property form. Their routes
+(`/compare`, `/arv`, `/more`, `/properties/new`) say so rather than leaving the
+navigation pointing at dead links. Still inert on the built screens: the
+dashboard's period segment, "ייצא CSV", the ledger's view segment, search,
+"מסמכים", "עוד".
 
-The **b** variants — the BRRRR pipeline dashboard (1b), the deal sheet (2b) and
-the phase timeline (3b) — are not built. They are alternative treatments of the
-same data, so the data layer already supports them.
+## The calculator and where its formulas come from
+
+`src/lib/calc.ts` is a transcription of the investor's Google Sheet
+"מחשבון עסקה" — its Flip tab, BRRRR tab and buy‑and‑hold tab — into pure
+functions over a `DealInputs` record: amortized and interest‑only payments,
+percentage or itemized closing costs, contingency, carry over the rehab
+period, cost of sale, reserves, total cash needed, cash‑out refinance, NOI,
+cash‑on‑cash, cap rate, DSCR and the 1% rule. `scripts/calc.test.ts` pins the
+module to the sheet's own totals (`npm test`, plain `node --test`; Node strips
+the types itself).
+
+One place the module deliberately shows more than the sheet: the sheet leaves
+rehab‑period interest out of "cash needed". The matrix has a row for it,
+marked as such, so the investor can decide.
+
+### Actuals on the property, projections in `assumptions`
+
+What has happened is a fact on `Property` — price paid, closing paid, rehab
+spent, a rented unit's real rent and debt service — and wins over any
+assumption where both exist. Everything forward‑looking lives in
+`Property.assumptions` (a `DealAssumptions` block: loan terms, carry, OpEx
+ratios, refinance terms, cost of sale) and is what the calculator edits.
+Nothing projected is stored: the property page's outcome cards and the
+dashboard's "רווח צפוי" column call the same functions the calculator does,
+so a save in the calculator changes both.
+
+### Elm Ave under the investor's model
+
+The seed for 4412 Elm Ave is anchored to what the mockups fix as fact —
+$65,600 drawn at close (80% of price), $96,000 of hard money in total, 10.5%
+and 2 points, a 7‑month rehab, a 75% LTV refinance — with the sheet's defaults
+for everything else (8% vacancy, 10% management, 5% maintenance, 5% CapEx,
+3 months of reserves, 8% cost of sale).
+
+Under those defaults the mockups' outcome figures do not hold. The design
+assumed $257/month of operating cost with no vacancy or management; the
+sheet's OpEx on $1,450 of rent is roughly $480. So instead of "+$318/month,
+CoC 39%, $9,800 left in the deal", the model says: cash flow around −$70,
+DSCR 0.92, about $6,900 left in — a thin BRRRR — against a flip that nets
+about $16,600 for a 42% return on cash. **By the investor's own model this
+property is a marginal hold and a strong flip**, the opposite of the mockup's
+"BRRRR ✓" column. The calculator shows that rather than tuning the inputs to
+reproduce the mockup; the assumptions are one tap away if the investor
+disagrees with a default.
+
+## State
+
+`src/store/` is a small localStorage store: one immutable state object,
+seeded from `data/portfolio.ts`, read through `useSyncExternalStore` with the
+seed as the server snapshot — so server HTML and the hydration pass match and
+stored values arrive a frame later. Pages are thin; screens are client
+components that take an id and read the store. Actions: `addExpense`,
+`setExpenseCategory`, `raiseCategoryBudget`, `saveDealInputs`, `resetToSeed`.
+A categorised amount moves the category's spend and the property's rehab
+spend together, keeping the seed's invariant that the categories sum to the
+rehab spent. A version mismatch reseeds — bump `STORE_VERSION` when the shape
+of `assumptions` changes.
 
 ## How it is organised
 
@@ -49,13 +108,17 @@ src/
   app/               routes; each page is a thin shell around a screen component
   components/
     layout/          top bar (desktop), tab bar (phone), shared page shell
-    dashboard/       portfolio KPIs, properties table, phone property cards
-    property/        overview, budget-vs-actual, BRRRR timeline
-    expenses/        expense ledger with filters, receipt capture sheet
+    dashboard/       dashboard + list screens, properties table, phone cards
+    property/        overview, tabs, budget-vs-actual, BRRRR timeline
+    expenses/        ledger with filters, new-expense sheet, category chips
+    calculator/      assumptions form, scenario matrix, ARV circles
     ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText
   data/              types + seed data from the mockups
-  lib/               deal maths, formatting, label vocabulary
+  lib/               calc.ts (the spreadsheet), deal.ts (portfolio helpers), format, labels
+  store/             localStorage store and hooks
   styles/organic.css the design system, copied verbatim from the handoff
+scripts/calc.test.ts the spreadsheet's totals as tests
+preview/             esbuild bundle of the same app with hash routing, for the review artifact
 ```
 
 ### Two conventions worth knowing
@@ -67,12 +130,9 @@ in the data files marks its Latin runs with braces (`"{$5,150} מול {$4,800}"`
 and renders through `<RichText>`; a regex cannot tell that `18.9` is a Hebrew
 date that belongs in the RTL flow while `$1,350` is not.
 
-**Figures are derived, not stored.** `lib/deal.ts` computes all-in cost, the
-70%-rule MAO, refinance proceeds, cash flow, cash-on-cash and flip ROI from the
-inputs in `data/portfolio.ts`. Every figure shown in the mockups reproduces
-exactly. Only quantities with no derivation are stored as authored data: a
-lender's payoff, a listing price, a realised sale, and the cost-of-sale
-assumption behind the flip profit.
+**Figures are derived, not stored.** `lib/calc.ts` and `lib/deal.ts` compute
+every projected figure from the property's facts and its `assumptions`; see
+"Actuals on the property, projections in `assumptions`" above.
 
 ## Deliberate divergences from the mockups
 
@@ -87,8 +147,10 @@ Three places where the prototype could not be copied literally:
    The roof is sage green in the mockups at 95% of budget because the trade is
    finished, not because of the number; leaving it to the numbers would have
    turned every under-budget category green.
-3. **Expense filter counts** describe the whole 42-row ledger, as the mockups
-   and the page header do, while the table shows the eight seeded rows.
+3. **The ledger header** says "42 הוצאות · 38 קבלות · 4 ללא קטגוריה" — the
+   whole ledger, as the mockup states it — while only eight rows are seeded.
+   The filter chips beside the table count the rows that are actually there,
+   because they filter them.
 
 Two smaller notes: the design system's `.seg-opt` and `.nav-brand` use physical
 CSS properties that flip wrong in RTL, corrected in `app/globals.css` so
@@ -98,7 +160,7 @@ stay in the original faces — the arrangement the mockups were designed around.
 
 ## Data
 
-`src/data/portfolio.ts` holds six sample properties, one property's rehab
-budget broken into seven categories, eight expenses and the portfolio summary —
-all from the mockups. Nothing persists; the app is stateless by design, so the
-screens can be judged before a data model is committed to.
+`src/data/portfolio.ts` holds six sample properties with their assumptions,
+one property's rehab budget broken into seven categories, eight of the
+ledger's 42 expenses, and the portfolio summary. It is the seed the store
+starts from; edits live in the browser's localStorage until a backend exists.
