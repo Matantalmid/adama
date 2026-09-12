@@ -5,9 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
-import { getProperty, activePropertyId } from "@/data/portfolio";
+import { activePropertyId } from "@/data/portfolio";
 import { money, moneyExact } from "@/lib/format";
 import { stageLabels } from "@/lib/labels";
+import { useProperty } from "@/store/hooks";
 
 import styles from "./ReceiptCaptureSheet.module.css";
 
@@ -36,7 +37,7 @@ const scanned = {
 };
 
 export function ReceiptCaptureSheet({ onClose }: { onClose: () => void }) {
-  const property = getProperty(activePropertyId);
+  const property = useProperty(activePropertyId);
   const categories = property?.rehabCategories ?? [];
   const [selected, setSelected] = useState<string | null>("electric");
   const closeRef = useRef<HTMLButtonElement>(null);

@@ -1,0 +1,424 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.breadcrumb {
+  font-size: 12.5px;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.separator {
+  margin: 0 6px;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 420px;
+  padding-top: 8px;
+}
+
+.select {
+  appearance: auto;
+  font-family: var(--font-body);
+}
+
+/* ── header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 40px;
+  direction: ltr;
+  text-align: right;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ── layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.inputs {
+  position: sticky;
+  top: calc(var(--topbar-h) + 16px);
+  max-height: calc(100dvh - var(--topbar-h) - 32px);
+  overflow-y: auto;
+  padding-inline-end: 4px;
+  scrollbar-width: thin;
+}
+
+.inputsDisclosure > summary {
+  list-style: none;
+  cursor: default;
+}
+
+.inputsDisclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+.inputsSummary {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+/* ── form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px 16px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--color-surface);
+}
+
+.legend {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.field {
+  min-width: 0;
+}
+
+.numWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.numInput {
+  padding-inline-end: 64px;
+  font-variant-numeric: tabular-nums;
+  background: var(--color-bg);
+}
+
+.numUnit {
+  position: absolute;
+  inset-inline-end: 12px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hint {
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.echo {
+  font-size: 12.5px;
+}
+
+.itemized {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+}
+
+/* ── circles (mockup 2b) ── */
+.circles {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.circleArv {
+  width: 210px;
+  height: 210px;
+  background: var(--color-accent-2-300);
+  color: var(--color-accent-2-900);
+}
+
+.circleKicker {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.circleValue {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  line-height: 1;
+}
+
+.circleMeta {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.circleStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.circleRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.circleSmall {
+  width: 76px;
+  height: 76px;
+}
+
+.circleMao {
+  background: var(--color-accent-200);
+  color: var(--color-accent-900);
+}
+
+.circleSurface {
+  background: var(--color-surface);
+}
+
+.circleKickerSm {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+}
+
+.circleValueSm {
+  font-family: var(--font-heading);
+  font-size: 16px;
+}
+
+.circleText {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ── matrix ── */
+.matrix {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.matrixGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  font-size: 13.5px;
+}
+
+.matrixHead {
+  padding: 14px 20px;
+  font-family: var(--font-heading);
+  font-size: 17px;
+}
+
+.winnerHead {
+  background: var(--color-accent-2-200);
+  color: var(--color-accent-2-900);
+}
+
+.matrixRow {
+  display: contents;
+}
+
+.cell {
+  padding: 9px 20px;
+  border-top: 1px solid var(--color-divider);
+  font-variant-numeric: tabular-nums;
+}
+
+.cellLabel {
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.winner {
+  background: var(--color-accent-2-100);
+  font-weight: 600;
+}
+
+.dividerRow {
+  border-top: 2px solid var(--color-divider);
+  padding-top: 14px;
+}
+
+.matrixNote {
+  margin: 0;
+  padding: 10px 20px 14px;
+  font-size: 12px;
+}
+
+/* ── save bar (phone) ── */
+.saveBar {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inputs {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    order: 1;
+  }
+}
+
+@media (max-width: 899px) {
+  .page {
+    padding-top: 16px;
+    gap: 14px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .inputsDisclosure > summary {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .inputsDisclosure > summary::after {
+    content: "▾";
+  }
+
+  .inputsDisclosure[open] > summary::after {
+    content: "▴";
+  }
+
+  .circles {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .circleArv {
+    align-self: center;
+    width: 170px;
+    height: 170px;
+  }
+
+  .circleValue {
+    font-size: 32px;
+  }
+
+  .matrixGrid {
+    grid-template-columns: 1.3fr 1fr 1fr;
+    font-size: 12.5px;
+  }
+
+  .matrixHead,
+  .cell {
+    padding-inline: 12px;
+  }
+
+  .itemized,
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+
+  .saveBar {
+    position: fixed;
+    inset-inline: 12px;
+    bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px 10px 18px;
+    border-radius: 999px;
+    background: var(--color-neutral-900);
+    color: #fff;
+    font-size: 13px;
+    box-shadow: var(--shadow-lg);
+  }
+}

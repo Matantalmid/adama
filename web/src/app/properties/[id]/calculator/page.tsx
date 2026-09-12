@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { ExpensesScreen } from "@/components/expenses/ExpensesScreen";
+import { CalculatorScreen } from "@/components/calculator/CalculatorScreen";
 import { AppShell } from "@/components/layout/AppShell";
 import { getProperty, properties } from "@/data/portfolio";
 
@@ -11,10 +11,10 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const property = getProperty(id);
-  return { title: property ? `הוצאות · ${property.address}` : "הוצאות · אדמה" };
+  return { title: property ? `BRRRR / Flip · ${property.address}` : "מחשבון · אדמה" };
 }
 
-export default async function ExpensesPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CalculatorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const property = getProperty(id);
 
@@ -22,7 +22,7 @@ export default async function ExpensesPage({ params }: { params: Promise<{ id: s
 
   return (
     <AppShell>
-      <ExpensesScreen propertyId={property.id} />
+      <CalculatorScreen propertyId={property.id} />
     </AppShell>
   );
 }

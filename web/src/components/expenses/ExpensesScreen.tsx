@@ -13,6 +13,7 @@ import { expenseLedger } from "@/data/portfolio";
 import type { Expense, Property, RehabCategory } from "@/data/types";
 import { categoryFillPct, categoryState, isOverBudget } from "@/lib/deal";
 import { money, moneyExact, shortDate } from "@/lib/format";
+import { useExpenses, useProperty } from "@/store/hooks";
 
 import styles from "./Expenses.module.css";
 
@@ -30,13 +31,14 @@ const views = [
   { value: "phase", label: "לפי שלב" },
 ] as const;
 
-export function ExpensesScreen({
-  property,
-  expenses,
-}: {
-  property: Property;
-  expenses: Expense[];
-}) {
+export function ExpensesScreen({ propertyId }: { propertyId: string }) {
+  const property = useProperty(propertyId);
+  const expenses = useExpenses(propertyId);
+  if (!property) return null;
+  return <ExpensesBody property={property} expenses={expenses} />;
+}
+
+function ExpensesBody({ property, expenses }: { property: Property; expenses: Expense[] }) {
   const categories = property.rehabCategories ?? [];
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");

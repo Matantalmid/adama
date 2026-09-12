@@ -1,12 +1,12 @@
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { CalculatorScreen } from "@/components/calculator/CalculatorScreen";
+import { AppShell } from "@/components/layout/AppShell";
 
-export const metadata = { title: "מחשבונים · אדמה" };
+export const metadata = { title: "מחשבון BRRRR / Flip · אדמה" };
 
 export default function CalculatorsPage() {
   return (
-    <ComingSoon
-      title="מחשבוני BRRRR ו-Fix & Flip"
-      description="השוואה צד-לצד של החזקה מול מכירה לאותו נכס — עלויות, מימון, תזרים ו-ROI."
-    />
+    <AppShell>
+      <CalculatorScreen />
+    </AppShell>
   );
 }

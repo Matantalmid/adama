@@ -9,11 +9,12 @@ import ComparePage from "@/app/compare/page";
 import MorePage from "@/app/more/page";
 import NewPropertyPage from "@/app/properties/new/page";
 
+import { CalculatorScreen } from "@/components/calculator/CalculatorScreen";
 import { ExpensesScreen } from "@/components/expenses/ExpensesScreen";
 import { AppShell } from "@/components/layout/AppShell";
 import { PropertyScreen } from "@/components/property/PropertyScreen";
 import { Icon } from "@/components/ui/Icon";
-import { expensesForProperty, getProperty } from "@/data/portfolio";
+import { getProperty } from "@/data/portfolio";
 
 import { currentPath } from "./shims/navigation";
 import "@/app/globals.css";
@@ -41,7 +42,19 @@ function Router() {
     if (property) {
       return (
         <AppShell>
-          <ExpensesScreen property={property} expenses={expensesForProperty(property.id)} />
+          <ExpensesScreen propertyId={property.id} />
+        </AppShell>
+      );
+    }
+  }
+
+  const calcMatch = path.match(/^\/properties\/([^/]+)\/calculator$/);
+  if (calcMatch) {
+    const property = getProperty(calcMatch[1]);
+    if (property) {
+      return (
+        <AppShell>
+          <CalculatorScreen propertyId={property.id} />
         </AppShell>
       );
     }
@@ -59,7 +72,7 @@ function Router() {
             </button>
           }
         >
-          <PropertyScreen property={property} />
+          <PropertyScreen propertyId={property.id} />
         </AppShell>
       );
     }

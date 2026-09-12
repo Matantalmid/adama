@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/Icon";
@@ -7,7 +9,7 @@ import { PhotoFrame } from "@/components/ui/PhotoFrame";
 import { RichText } from "@/components/ui/RichText";
 import { Tag } from "@/components/ui/Tag";
 import type { Property } from "@/data/types";
-import { expensesForProperty, expenseLedger } from "@/data/portfolio";
+import { expenseLedger } from "@/data/portfolio";
 import { compareScenarios, inputsFromProperty } from "@/lib/calc";
 import {
   allInProjected,
@@ -19,8 +21,10 @@ import {
 } from "@/lib/deal";
 import { money, moneySigned, percent, ratio, sqft } from "@/lib/format";
 import { financingLabels, stageLabels, strategyLabels } from "@/lib/labels";
+import { useExpenses, useProperty } from "@/store/hooks";
 
 import { BudgetVsActual } from "./BudgetVsActual";
+import { PropertyTabs } from "./PropertyTabs";
 import { Timeline } from "./Timeline";
 import styles from "./Property.module.css";
 
@@ -29,7 +33,14 @@ import styles from "./Property.module.css";
  * either way: what it cost, what it is worth, how the renovation is tracking,
  * and whether holding beats selling.
  */
-export function PropertyScreen({ property }: { property: Property }) {
+export function PropertyScreen({ propertyId }: { propertyId: string }) {
+  const property = useProperty(propertyId);
+  const expenses = useExpenses(propertyId);
+  if (!property) return null;
+  return <PropertyBody property={property} expenseCount={expenses.length} />;
+}
+
+function PropertyBody({ property, expenseCount: seededCount }: { property: Property; expenseCount: number }) {
   const stage = stageLabels[property.stage];
   const mao = maxAllowableOffer(property);
   const over = overMao(property);
@@ -37,10 +48,9 @@ export function PropertyScreen({ property }: { property: Property }) {
   // the same numbers the calculator shows, so saving there changes this page.
   const { flip, brrrr } = compareScenarios(inputsFromProperty(property));
   const cashFlow = monthlyCashFlow(property) ?? brrrr.monthlyCashFlow;
+  // The ledger header describes the full 42‑row ledger; only 8 rows are seeded.
   const expenseCount =
-    property.id === expenseLedger.propertyId
-      ? expenseLedger.totalCount
-      : expensesForProperty(property.id).length;
+    property.id === expenseLedger.propertyId ? expenseLedger.totalCount : seededCount;
 
   return (
     <div className={styles.page}>
@@ -131,27 +141,7 @@ export function PropertyScreen({ property }: { property: Property }) {
         </div>
       </div>
 
-      {/* ── tabs ── */}
-      <nav className={styles.tabs} aria-label="מדורי הנכס">
-        <span className={`${styles.tab} ${styles.tabActive}`} aria-current="page">
-          סקירה
-        </span>
-        <Link href={`/properties/${property.id}/expenses`} className={styles.tab}>
-          הוצאות{" "}
-          <Tag tone="neutral" style={{ fontSize: 10, padding: "1px 7px", marginInlineStart: 4 }}>
-            <Num>{expenseCount}</Num>
-          </Tag>
-        </Link>
-        <Link href="/calculators" className={styles.tab}>
-          BRRRR / Flip
-        </Link>
-        <Link href="/arv" className={styles.tab}>
-          Comps &amp; ARV
-        </Link>
-        <span className={`${styles.tab} ${styles.tabDisabled}`} title="בסבב הבא">
-          מסמכים
-        </span>
-      </nav>
+      <PropertyTabs propertyId={property.id} active="overview" expenseCount={expenseCount} />
 
       {/* ── body ──
           The full category breakdown is a desktop panel; the phone gets the
@@ -211,7 +201,7 @@ export function PropertyScreen({ property }: { property: Property }) {
             </section>
           </div>
 
-          <Link href="/compare" className={styles.compareLink}>
+          <Link href={`/properties/${property.id}/calculator`} className={styles.compareLink}>
             השוואה מלאה BRRRR מול Flip ›
           </Link>
         </div>
@@ -273,7 +263,7 @@ function MobileRehabCard({ property }: { property: Property }) {
           <Icon name="camera" size={14} />
           צלם קבלה
         </Link>
-        <Link href="/calculators" className="btn btn-secondary">
+        <Link href={`/properties/${property.id}/calculator`} className="btn btn-secondary">
           BRRRR / Flip
         </Link>
       </div>

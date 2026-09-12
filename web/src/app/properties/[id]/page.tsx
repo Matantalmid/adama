@@ -29,7 +29,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ id: s
         </button>
       }
     >
-      <PropertyScreen property={property} />
+      <PropertyScreen propertyId={property.id} />
     </AppShell>
   );
 }
