@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import { Icon } from "@/components/ui/Icon";
@@ -7,6 +9,7 @@ import { Tag } from "@/components/ui/Tag";
 import type { Property } from "@/data/types";
 import { categoryFillPct, categoryState, isOverBudget, rehabRemaining } from "@/lib/deal";
 import { money, ratio } from "@/lib/format";
+import { actions } from "@/store";
 
 import styles from "./BudgetVsActual.module.css";
 
@@ -64,7 +67,12 @@ export function BudgetVsActual({ property }: { property: Property }) {
           הוצאה
         </Link>
         {overrun ? (
-          <button type="button" className="btn btn-secondary" style={{ fontSize: 13 }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            style={{ fontSize: 13 }}
+            onClick={() => actions.raiseCategoryBudget(property.id, overrun.id)}
+          >
             עדכן תקציב {overrun.name}
           </button>
         ) : null}

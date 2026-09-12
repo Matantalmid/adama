@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { actions } from "@/store";
+
 import { Icon } from "@/components/ui/Icon";
 import { Meter } from "@/components/ui/Meter";
 import { Num } from "@/components/ui/Num";
@@ -15,6 +17,8 @@ import { categoryFillPct, categoryState, isOverBudget } from "@/lib/deal";
 import { money, moneyExact, shortDate } from "@/lib/format";
 import { useExpenses, useProperty } from "@/store/hooks";
 
+import { CategoryChips } from "./CategoryChips";
+import { ReceiptCaptureSheet } from "./ReceiptCaptureSheet";
 import styles from "./Expenses.module.css";
 
 /**
@@ -43,6 +47,9 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [category, setCategory] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+  /** The unsorted row whose inline category picker is open. */
+  const [assigning, setAssigning] = useState<string | null>(null);
 
   const visible = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -109,7 +116,7 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
           <button type="button" className="btn btn-secondary">
             ייצא CSV
           </button>
-          <button type="button" className="btn btn-primary">
+          <button type="button" className="btn btn-primary" onClick={() => setAdding(true)}>
             <Icon name="plus" size={14} />
             הוצאה
           </button>
@@ -157,14 +164,14 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
           active={filter === "uncategorised"}
           onClick={() => setFilter((f) => (f === "uncategorised" ? "all" : "uncategorised"))}
         >
-          ללא קטגוריה · <Num>{ledger.uncategorisedCount}</Num>
+          ללא קטגוריה · <Num>{uncategorised}</Num>
         </FilterChip>
         <FilterChip
           tone="outline"
           active={filter === "no-receipt"}
           onClick={() => setFilter((f) => (f === "no-receipt" ? "all" : "no-receipt"))}
         >
-          ללא קבלה · <Num>{ledger.missingReceiptCount}</Num>
+          ללא קבלה · <Num>{missingReceipts}</Num>
         </FilterChip>
       </div>
 
@@ -197,7 +204,16 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
                     <Num>{expense.vendor}</Num>
                   </td>
                   <td>
-                    <CategoryCell category={findCategory(categories, expense.categoryId)} />
+                    <CategoryCell
+                      category={findCategory(categories, expense.categoryId)}
+                      categories={categories}
+                      picking={assigning === expense.id}
+                      onPick={() => setAssigning((current) => (current === expense.id ? null : expense.id))}
+                      onChoose={(id) => {
+                        actions.setExpenseCategory(expense.id, id);
+                        setAssigning(null);
+                      }}
+                    />
                   </td>
                   <td className="text-muted">
                     <RichText>{expense.payment}</RichText>
@@ -249,7 +265,16 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
               <RichText>{expense.description}</RichText>
             </div>
             <div className={styles.expenseMeta}>
-              <CategoryCell category={findCategory(categories, expense.categoryId)} />
+              <CategoryCell
+                category={findCategory(categories, expense.categoryId)}
+                categories={categories}
+                picking={assigning === expense.id}
+                onPick={() => setAssigning((current) => (current === expense.id ? null : expense.id))}
+                onChoose={(id) => {
+                  actions.setExpenseCategory(expense.id, id);
+                  setAssigning(null);
+                }}
+              />
               <span className="text-muted">
                 <Num>{shortDate(expense.date)}</Num> · <RichText>{expense.payment}</RichText>
               </span>
@@ -265,6 +290,10 @@ function ExpensesBody({ property, expenses }: { property: Property; expenses: Ex
           </p>
         ) : null}
       </div>
+
+      {adding ? (
+        <ReceiptCaptureSheet propertyId={property.id} prefill={false} onClose={() => setAdding(false)} />
+      ) : null}
 
       <div className={`text-muted ${styles.mobileTotals}`}>
         <span>
@@ -346,12 +375,34 @@ function Tile({
   );
 }
 
-function CategoryCell({ category }: { category: RehabCategory | null }) {
+function CategoryCell({
+  category,
+  categories,
+  picking,
+  onPick,
+  onChoose,
+}: {
+  category: RehabCategory | null;
+  categories: RehabCategory[];
+  picking: boolean;
+  onPick: () => void;
+  onChoose: (categoryId: string) => void;
+}) {
   if (!category) {
     return (
-      <button type="button" className={`tag ${styles.categoryButton}`}>
-        + בחר קטגוריה
-      </button>
+      <div className={styles.picker}>
+        <button
+          type="button"
+          className={`tag ${styles.categoryButton}`}
+          aria-expanded={picking}
+          onClick={onPick}
+        >
+          {picking ? "בחר:" : "+ בחר קטגוריה"}
+        </button>
+        {picking ? (
+          <CategoryChips categories={categories} selected={null} onSelect={onChoose} size="sm" />
+        ) : null}
+      </div>
     );
   }
 

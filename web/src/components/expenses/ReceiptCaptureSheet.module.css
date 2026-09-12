@@ -98,31 +98,44 @@
   cursor: pointer;
 }
 
-.categories {
+.amountField {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  direction: ltr;
 }
 
-.category {
-  padding: 7px 14px;
-  font-size: 13px;
-  border: 1px solid transparent;
-  background: var(--color-neutral-100);
-  color: var(--color-neutral-800);
-  cursor: pointer;
-  font-family: inherit;
+.amountCurrency {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-.categorySelected {
-  background: var(--color-accent);
-  color: var(--color-bg);
-}
-
-.categoryAdd {
+.amountInput {
+  width: 7ch;
+  min-width: 4ch;
+  border: 0;
+  border-bottom: 2px solid var(--color-divider);
   background: transparent;
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  font-family: var(--font-heading);
+  font-size: 48px;
+  line-height: 1.1;
+  text-align: left;
+  color: var(--color-text);
+  caret-color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.amountInput:focus-visible {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .warning {

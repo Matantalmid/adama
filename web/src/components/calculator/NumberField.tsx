@@ -52,9 +52,12 @@ export function NumberField({
           dir="ltr"
           value={draft}
           disabled={disabled}
-          onFocus={() => {
+          // Select the whole value rather than swapping the text on focus:
+          // typing then replaces it, and nothing races the browser's own
+          // edit of the field.
+          onFocus={(event) => {
             setEditing(true);
-            setDraft(value === 0 ? "" : String(value));
+            event.target.select();
           }}
           onBlur={() => {
             setEditing(false);
@@ -64,7 +67,7 @@ export function NumberField({
             const raw = event.target.value;
             setDraft(raw);
             const parsed = Number(raw.replace(/[^\d.-]/g, ""));
-            if (raw.trim() === "" ) onChange(0);
+            if (raw.trim() === "") onChange(0);
             else if (!Number.isNaN(parsed) && parsed >= min) onChange(parsed);
           }}
         />

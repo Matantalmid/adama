@@ -27,7 +27,7 @@ export function ArvCircles({
         <div className={styles.circleKicker}>ARV</div>
         <Num className={styles.circleValue}>{moneyCompact(inputs.arv)}</Num>
         <div className={styles.circleMeta}>
-          {compCount ? <>{compCount} comps · </> : null}
+          {compCount ? <><Num>{`${compCount} comps`}</Num> · </> : null}
           {sqft ? <Num>{`$${Math.round(inputs.arv / sqft)}/sqft`}</Num> : null}
         </div>
       </div>
@@ -39,7 +39,7 @@ export function ArvCircles({
             <Num className={styles.circleValueSm}>{moneyCompact(flip.mao)}</Num>
           </div>
           <p className={styles.circleText}>
-            <b>70% rule:</b>{" "}
+            <b><Num>70% rule</Num>:</b>{" "}
             {over > 0 ? (
               <>
                 המחיר <Num>{money(inputs.purchasePrice)}</Num>, <Num>{money(over)}</Num> מעל ה‑MAO.
@@ -60,7 +60,7 @@ export function ArvCircles({
           <p className={styles.circleText}>
             {brrrr.refinance ? (
               <>
-                ריפיננס ב‑<Num>{percent(inputs.refinance?.ltvPct ?? 0)}</Num> LTV →{" "}
+                ריפיננס ב‑<Num>{`${percent(inputs.refinance?.ltvPct ?? 0)} LTV`}</Num> →{" "}
                 <Num>{money(Math.round(brrrr.refinance.newLoan))}</Num>.{" "}
                 <span className="text-muted">
                   נשארים בעסקה ~<Num>{money(Math.round(brrrr.cashLeftInDeal))}</Num>.

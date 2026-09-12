@@ -77,12 +77,7 @@
 }
 
 .inputs {
-  position: sticky;
-  top: calc(var(--topbar-h) + 16px);
-  max-height: calc(100dvh - var(--topbar-h) - 32px);
-  overflow-y: auto;
-  padding-inline-end: 4px;
-  scrollbar-width: thin;
+  min-width: 0;
 }
 
 .inputsDisclosure > summary {
@@ -144,10 +139,13 @@
   min-width: 0;
 }
 
+/* The input is left‑to‑right whatever the page direction, so the wrapper is
+   too — that puts the unit after the digits, at the physical right. */
 .numWrap {
   position: relative;
   display: flex;
   align-items: center;
+  direction: ltr;
 }
 
 .numInput {
@@ -329,9 +327,6 @@
   }
 
   .inputs {
-    position: static;
-    max-height: none;
-    overflow: visible;
     order: 1;
   }
 }
