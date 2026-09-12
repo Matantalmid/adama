@@ -1,3 +1,5 @@
+import type { DealAssumptions } from "@/lib/calc";
+
 export type Strategy = "BRRRR" | "FLIP" | "UNDECIDED";
 
 /** Where a property sits in the BRRRR/Flip pipeline. */
@@ -57,22 +59,33 @@ export interface Property {
   yearBuilt?: number;
 
   purchasePrice: number;
+  /** Closing costs actually paid at purchase (0 while still under contract). */
   closingCosts: number;
   rehabBudget: number;
   rehabSpent: number;
-  /** Carrying costs over the expected hold. */
-  holdingCosts: number;
-  /** Points + interest paid to the lender over the hold. */
-  loanCosts: number;
 
   arv: number;
   /** How many comparable sales back the ARV. */
   compCount?: number;
 
+  /**
+   * Summary of the purchase financing, for tags and the dashboard. Mirrored
+   * from `assumptions.purchaseLoan` by lib/calc.applyInputsToProperty; nothing
+   * else writes it.
+   */
   financing: Financing;
 
-  /** Monthly rent — expected while in rehab, actual once rented. */
+  /**
+   * Everything forward‑looking about the deal — loan terms, carry, OpEx
+   * ratios, refinance, cost of sale. Edited in the calculator; every projected
+   * figure on every screen derives from it (lib/calc.ts). Facts about the
+   * property live on the fields above and win over these where both exist.
+   */
+  assumptions: DealAssumptions;
+
+  /** Monthly rent — actual once rented; a projection lives in assumptions.income. */
   monthlyRent?: number;
+  /** Actual debt service and operating costs, for rented properties only. */
   monthlyDebtService?: number;
   monthlyOpex?: number;
 
@@ -83,9 +96,8 @@ export interface Property {
   timeline?: Milestone[];
 
   /**
-   * Figures the mockups state directly rather than derive — a listing price,
-   * a realised sale, a lender's refinance terms. Everything else on the
-   * screens is computed from the fields above (see lib/deal.ts).
+   * Outcomes that happened — a listing, a realised sale. Projections are never
+   * stored; they come from lib/calc.ts.
    */
   listPrice?: number;
   soldFor?: number;
@@ -93,16 +105,6 @@ export interface Property {
   realisedProfit?: number;
   realisedRoiPct?: number;
   holdMonths?: number;
-  refinanceLtvPct?: number;
-  /** Expected profit the portfolio table shows for in-flight deals. */
-  projectedProfit?: number;
-
-  /** Cash still in the deal after the cash-out refinance. */
-  cashLeftInDeal?: number;
-  /** Net profit if the property were flipped instead of held. */
-  flipNetProfit?: number;
-  flipHoldMonths?: number;
-  brrrrMonthsToCash?: number;
 }
 
 export type MilestoneState = "done" | "active" | "upcoming";

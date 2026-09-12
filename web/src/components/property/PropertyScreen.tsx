@@ -8,10 +8,9 @@ import { RichText } from "@/components/ui/RichText";
 import { Tag } from "@/components/ui/Tag";
 import type { Property } from "@/data/types";
 import { expensesForProperty, expenseLedger } from "@/data/portfolio";
+import { compareScenarios, inputsFromProperty } from "@/lib/calc";
 import {
   allInProjected,
-  cashOnCashPct,
-  flipRoiPct,
   isOverBudget,
   maxAllowableOffer,
   monthlyCashFlow,
@@ -34,9 +33,10 @@ export function PropertyScreen({ property }: { property: Property }) {
   const stage = stageLabels[property.stage];
   const mao = maxAllowableOffer(property);
   const over = overMao(property);
-  const cashFlow = monthlyCashFlow(property);
-  const coc = cashOnCashPct(property);
-  const roi = flipRoiPct(property);
+  // Projections for both strategies from the property's stored assumptions —
+  // the same numbers the calculator shows, so saving there changes this page.
+  const { flip, brrrr } = compareScenarios(inputsFromProperty(property));
+  const cashFlow = monthlyCashFlow(property) ?? brrrr.monthlyCashFlow;
   const expenseCount =
     property.id === expenseLedger.propertyId
       ? expenseLedger.totalCount
@@ -121,8 +121,8 @@ export function PropertyScreen({ property }: { property: Property }) {
               label={property.strategy === "FLIP" ? "רווח צפוי" : "רווח BRRRR"}
               value={
                 property.strategy === "FLIP"
-                  ? money(property.projectedProfit ?? property.flipNetProfit ?? 0)
-                  : `${moneySigned(cashFlow ?? 0)}/חודש`
+                  ? money(Math.round(flip.netProfit))
+                  : `${moneySigned(Math.round(cashFlow))}/חודש`
               }
               variant="profit"
             />
@@ -179,14 +179,15 @@ export function PropertyScreen({ property }: { property: Property }) {
                 BRRRR
               </div>
               <Num className={`stat ${styles.outcomeValue}`}>
-                {money(property.cashLeftInDeal ?? 0)}
+                {money(Math.round(brrrr.cashLeftInDeal))}
               </Num>
               <p className={styles.outcomeNote}>
-                מזומן שנשאר בעסקה · <Num>{`${moneySigned(cashFlow ?? 0)}/חודש`}</Num>
-                {coc !== null ? (
+                מזומן שנשאר בעסקה ·{" "}
+                <Num>{`${moneySigned(Math.round(brrrr.monthlyCashFlow))}/חודש`}</Num>
+                {brrrr.cashOnCashPct !== null ? (
                   <>
                     {" · "}
-                    <Num>CoC {percent(coc)}</Num>
+                    <Num>CoC {percent(brrrr.cashOnCashPct)}</Num>
                   </>
                 ) : null}
               </p>
@@ -195,17 +196,17 @@ export function PropertyScreen({ property }: { property: Property }) {
             <section className={`card ${styles.outcome}`}>
               <div className="card-kicker">Fix &amp; Flip</div>
               <Num className={`stat ${styles.outcomeValue}`}>
-                {money(property.flipNetProfit ?? 0)}
+                {money(Math.round(flip.netProfit))}
               </Num>
               <p className={`text-muted ${styles.outcomeNote}`}>
                 רווח נקי
-                {roi !== null ? (
+                {flip.roiPct !== null ? (
                   <>
                     {" · "}
-                    <Num>ROI {percent(roi, 1)}</Num>
+                    <Num>ROI {percent(flip.roiPct, 1)}</Num>
                   </>
                 ) : null}
-                {property.flipHoldMonths ? ` · החזקה ${property.flipHoldMonths} חודשים` : null}
+                {` · החזקה ${flip.holdMonths} חודשים`}
               </p>
             </section>
           </div>

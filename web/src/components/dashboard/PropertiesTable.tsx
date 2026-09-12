@@ -11,6 +11,7 @@ import {
   monthlyCashFlow,
   rehabProgressPct,
 } from "@/lib/deal";
+import { compareScenarios, inputsFromProperty } from "@/lib/calc";
 import { money, moneySigned, percent, sqft, unitMix } from "@/lib/format";
 import { stageLabels, strategyLabels } from "@/lib/labels";
 
@@ -116,8 +117,17 @@ function ProfitCell({ property }: { property: Property }) {
     return <Num className={styles.profit}>{`${money(released)} cash-out`}</Num>;
   }
 
-  if (property.projectedProfit !== undefined) {
-    return <Num className={styles.profit}>{money(property.projectedProfit)}</Num>;
+  // In‑flight deals show the projection for their declared strategy: a flip
+  // its net profit, a BRRRR its post‑refinance monthly cash flow.
+  if (property.strategy === "FLIP") {
+    const { flip } = compareScenarios(inputsFromProperty(property));
+    return <Num className={styles.profit}>{money(Math.round(flip.netProfit))}</Num>;
+  }
+  if (property.strategy === "BRRRR") {
+    const { brrrr } = compareScenarios(inputsFromProperty(property));
+    return (
+      <Num className={styles.profit}>{`${moneySigned(Math.round(brrrr.monthlyCashFlow))}/חודש`}</Num>
+    );
   }
 
   // Nothing modelled yet — the only question that matters on a deal this

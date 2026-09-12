@@ -1,6 +1,8 @@
+import { defaultAssumptions, type DealAssumptions } from "../lib/calc.ts";
 import type {
   AttentionItem,
   Expense,
+  Financing,
   PortfolioSummary,
   Property,
 } from "./types";
@@ -25,6 +27,22 @@ const elmRehabCategories = [
   { id: "misc", name: "שונות", budget: 5_000, spent: 4_450 },
 ];
 
+/**
+ * Assumptions for a seed property: the sheet's defaults, shaped to its
+ * financing, with the overrides each deal is known to carry.
+ */
+function assume(
+  financing: Financing,
+  monthlyRent: number,
+  overrides: Partial<DealAssumptions>,
+): DealAssumptions {
+  return { ...defaultAssumptions({ financing, monthlyRent }), ...overrides };
+}
+
+const hardMoney: Financing = { kind: "hard-money", ratePct: 10.5, points: 2, ltcPct: 80 };
+const dscr: Financing = { kind: "dscr", ratePct: 7.6, ltcPct: 75 };
+const cash: Financing = { kind: "cash" };
+
 export const properties: Property[] = [
   {
     id: "elm-ave",
@@ -44,30 +62,34 @@ export const properties: Property[] = [
     closingCosts: 2_900,
     rehabBudget: 38_000,
     rehabSpent: 29_400,
-    holdingCosts: 4_500,
-    loanCosts: 5_180,
 
     arv: 165_000,
     compCount: 5,
 
-    financing: { kind: "hard-money", ratePct: 10.5, points: 2, ltcPct: 80, amount: 96_000 },
-
-    // Post-refinance: a 30-year DSCR note on the $123,750 cash-out, plus taxes,
-    // insurance and reserves. Nets the +$318/month the mockups show.
+    financing: { ...hardMoney, amount: 96_000 },
     monthlyRent: 1_450,
-    monthlyDebtService: 875,
-    monthlyOpex: 257,
+
+    // Anchored to the mockups where they state a fact: $65,600 drawn at
+    // closing (80% of price), $96,000 of hard money in total (80% of price +
+    // rehab), 10.5% and 2 points, a 7‑month rehab, a 75% LTV refinance. The
+    // rest are the spreadsheet's own defaults (8% vacancy, 10% management,
+    // 5% maintenance, 5% CapEx, 3 months of reserves, 8% cost of sale).
+    //
+    // Under those defaults the mockups' outcome figures do not hold — the
+    // design assumed $257/month of OpEx with no vacancy or management. By the
+    // investor's own model this deal is a thin BRRRR (cash flow in the tens of
+    // dollars, DSCR ≈ 1.05) and a strong flip. The calculator shows that
+    // rather than tuning the inputs to reproduce the mockup.
+    assumptions: assume(hardMoney, 1_450, {
+      contingencyPct: 0,
+      rehabMonths: 7,
+      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
+      rehabLoan: { financedPct: 80, ratePct: 10.5 },
+      pointsPct: 2,
+      holding: { propertyTaxYr: 1_800, insuranceYr: 1_080, utilitiesMo: 300, yardSnowMo: 103 },
+    }),
 
     note: "בשיפוץ · שבוע 6",
-    refinanceLtvPct: 75,
-    projectedProfit: 37_600,
-
-    // Outcomes that rest on assumptions the design states as results rather
-    // than inputs (the lender's final payoff, a ~6.7% cost of sale).
-    cashLeftInDeal: 9_800,
-    flipNetProfit: 21_300,
-    flipHoldMonths: 5,
-    brrrrMonthsToCash: 13,
 
     rehabCategories: elmRehabCategories,
     timeline: [
@@ -116,15 +138,23 @@ export const properties: Property[] = [
     closingCosts: 3_400,
     rehabBudget: 52_000,
     rehabSpent: 54_800,
-    holdingCosts: 4_700,
-    loanCosts: 0,
 
     arv: 235_000,
 
-    financing: { kind: "hard-money", ratePct: 10.5, points: 2 },
+    financing: hardMoney,
+
+    // Duplex rent is an assumption — it is a flip; the BRRRR column exists to
+    // show what holding it would have looked like.
+    assumptions: assume(hardMoney, 1_900, {
+      contingencyPct: 0,
+      rehabMonths: 6,
+      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
+      rehabLoan: { financedPct: 80, ratePct: 10.5 },
+      pointsPct: 2,
+      holding: { propertyTaxYr: 2_200, insuranceYr: 1_200, utilitiesMo: 400, yardSnowMo: 100 },
+    }),
 
     listPrice: 239_900,
-    projectedProfit: 34_200,
   },
   {
     id: "olney-st",
@@ -142,16 +172,24 @@ export const properties: Property[] = [
     closingCosts: 2_400,
     rehabBudget: 31_000,
     rehabSpent: 31_000,
-    holdingCosts: 3_800,
-    loanCosts: 0,
 
     arv: 158_000,
 
-    financing: { kind: "dscr", ratePct: 7.6, ltcPct: 75 },
+    financing: dscr,
 
+    // Rented: these three are actuals from the ledger, not projections.
     monthlyRent: 1_350,
     monthlyDebtService: 812,
     monthlyOpex: 220,
+
+    assumptions: assume(dscr, 1_350, {
+      contingencyPct: 0,
+      rehabMonths: 6,
+      purchaseLoan: { kind: "dscr", ltvPct: 75, ratePct: 7.6, termYears: 30 },
+      rehabLoan: { financedPct: 0, ratePct: 12 },
+      pointsPct: 0,
+      holding: { propertyTaxYr: 1_800, insuranceYr: 1_000, utilitiesMo: 300, yardSnowMo: 100 },
+    }),
 
     note: "חוזה מתחדש ב-1.10",
   },
@@ -170,15 +208,21 @@ export const properties: Property[] = [
     closingCosts: 3_100,
     rehabBudget: 40_000,
     rehabSpent: 40_000,
-    holdingCosts: 4_700,
-    loanCosts: 0,
 
     arv: 198_000,
 
-    financing: { kind: "dscr", ratePct: 7.6, ltcPct: 75 },
+    financing: dscr,
+
+    assumptions: assume(dscr, 2_100, {
+      contingencyPct: 0,
+      rehabMonths: 6,
+      purchaseLoan: { kind: "dscr", ltvPct: 75, ratePct: 7.6, termYears: 30 },
+      rehabLoan: { financedPct: 0, ratePct: 12 },
+      pointsPct: 0,
+      holding: { propertyTaxYr: 2_200, insuranceYr: 1_200, utilitiesMo: 400, yardSnowMo: 100 },
+    }),
 
     note: "שמאי · חמישי 18.9",
-    refinanceLtvPct: 75,
   },
   {
     id: "47th-st",
@@ -196,12 +240,19 @@ export const properties: Property[] = [
     closingCosts: 2_200,
     rehabBudget: 28_000,
     rehabSpent: 28_000,
-    holdingCosts: 4_600,
-    loanCosts: 0,
 
     arv: 142_000,
 
-    financing: { kind: "hard-money", ratePct: 10.5, points: 2 },
+    financing: hardMoney,
+
+    assumptions: assume(hardMoney, 1_100, {
+      contingencyPct: 0,
+      rehabMonths: 4,
+      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
+      rehabLoan: { financedPct: 80, ratePct: 10.5 },
+      pointsPct: 2,
+      holding: { propertyTaxYr: 2_000, insuranceYr: 1_000, utilitiesMo: 750, yardSnowMo: 150 },
+    }),
 
     soldOn: "6.2026",
     realisedProfit: 31_200,
@@ -224,12 +275,15 @@ export const properties: Property[] = [
     closingCosts: 0,
     rehabBudget: 26_800,
     rehabSpent: 0,
-    holdingCosts: 0,
-    loanCosts: 0,
 
     arv: 149_000,
 
-    financing: { kind: "cash" },
+    financing: cash,
+
+    // Under contract, nothing decided: the sheet's defaults, cash purchase.
+    // Contingency stays at 0 so the MAO the mockups show ($77,500) holds;
+    // the calculator is where the investor adds it back.
+    assumptions: assume(cash, 1_250, { contingencyPct: 0 }),
   },
 ];
 
