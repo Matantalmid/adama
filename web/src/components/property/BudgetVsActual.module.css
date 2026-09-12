@@ -1,0 +1,70 @@
+.card {
+  padding: 20px 24px;
+  gap: 14px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.headFigures {
+  font-size: 13px;
+}
+
+.remaining {
+  margin-inline-start: 6px;
+}
+
+.rows {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) 120px;
+  gap: 8px 14px;
+  align-items: center;
+  font-size: 13px;
+}
+
+/* Each row is three grid cells; the wrapper only exists to key them together. */
+.row {
+  display: contents;
+}
+
+.rowName {
+  white-space: nowrap;
+}
+
+.rowFigure,
+.rowOver {
+  text-align: left;
+}
+
+.rowOver {
+  color: var(--color-accent-700);
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 16px 18px;
+  }
+
+  .rows {
+    grid-template-columns: 74px minmax(0, 1fr) 104px;
+    font-size: 12.5px;
+  }
+}

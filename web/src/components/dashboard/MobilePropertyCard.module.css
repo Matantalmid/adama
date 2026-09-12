@@ -1,0 +1,44 @@
+.card {
+  padding: 14px 16px;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.head strong {
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 12px;
+}
+
+.cashFlow {
+  color: var(--color-accent-2-700);
+  font-weight: 600;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress > :first-child {
+  flex: 1;
+}
+
+.progressLabel {
+  font-size: 11px;
+}
+
+.over {
+  color: var(--color-accent-700);
+}

@@ -1,0 +1,43 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  padding-top: 8px;
+}
+
+.header h1 {
+  margin: 0 0 4px;
+  font-size: 34px;
+}
+
+.tableCard {
+  padding: 8px 20px 12px;
+  gap: 0;
+}
+
+.mobileList {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 899px) {
+  .page {
+    padding-top: 16px;
+  }
+
+  .header h1 {
+    font-size: 26px;
+  }
+
+  .tableCard {
+    display: none;
+  }
+
+  .mobileList {
+    display: flex;
+  }
+}

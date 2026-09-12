@@ -1,0 +1,50 @@
+/* Between the tab-bar breakpoint and the full 1180px artboard the table keeps
+   its columns and scrolls sideways rather than crushing them. */
+.scroll {
+  overflow-x: auto;
+}
+
+.scroll table {
+  min-width: 760px;
+}
+
+.address {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.address:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.rehab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rehab > :first-child {
+  flex: 1;
+}
+
+.rehab .num,
+.rehab span:last-child {
+  font-size: 11px;
+}
+
+.rehabOver {
+  color: var(--color-accent-700);
+  font-weight: 600;
+}
+
+.strategy {
+  white-space: nowrap;
+}
+
+.profit {
+  color: var(--color-accent-2-700);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
