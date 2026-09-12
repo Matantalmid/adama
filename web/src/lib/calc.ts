@@ -11,6 +11,24 @@ import type { FinancingKind, Property } from "@/data/types";
 
 // ── inputs ──────────────────────────────────────────────────────────────────
 
+/**
+ * A lender fee. The sheet writes origination either way: as a percentage of the
+ * loan ("עמלת הקמה / נקודות (%) 2.00%") or as a flat amount on each loan
+ * ("עמלות הקמה / נקודות (Points/Fees) $2" on the 188 Kendall Ave tab).
+ */
+export type Fee = { mode: "percent"; pct: number } | { mode: "amount"; amount: number };
+
+export function feeAmount(fee: Fee, principal: number): number {
+  return fee.mode === "percent" ? principal * (fee.pct / 100) : fee.amount;
+}
+
+/** A closing line the investor added for one deal — the sheet's unlabeled extra rows. */
+export interface CustomLine {
+  id: string;
+  label: string;
+  amount: number;
+}
+
 /** The sheet's itemized closing list, in its order. All USD. */
 export interface ClosingItems {
   titleInsurance: number;
@@ -46,10 +64,13 @@ export const closingItemLabels: Record<keyof ClosingItems, string> = {
 
 export const closingItemKeys = Object.keys(closingItemLabels) as (keyof ClosingItems)[];
 
-/** Closing costs are estimated as a share of price, or itemized line by line. */
+/**
+ * Closing costs are estimated as a share of price, or itemized line by line.
+ * `extras` are the deal's own additional lines, on top of the standard list.
+ */
 export type ClosingCosts =
   | { mode: "percent"; pct: number }
-  | { mode: "itemized"; items: ClosingItems };
+  | { mode: "itemized"; items: ClosingItems; extras?: CustomLine[] };
 
 export interface PurchaseLoan {
   kind: FinancingKind;
@@ -58,12 +79,22 @@ export interface PurchaseLoan {
   ratePct: number;
   /** Amortization, for conventional / DSCR. Hard money is interest‑only. */
   termYears: number;
+  /** Origination on this loan. */
+  points: Fee;
 }
 
 export interface RehabLoan {
-  /** Share of the rehab (incl. contingency) the lender funds — hard money, interest‑only. */
+  /** Share of the rehab (incl. contingency) the lender funds. */
   financedPct: number;
   ratePct: number;
+  /** Origination on this loan. */
+  points: Fee;
+  /**
+   * Amortized over this many years. Hard money leaves it unset and pays
+   * interest only over the rehab period; the 188 Kendall Ave tab finances the
+   * rehab on a 30‑year note alongside the purchase loan.
+   */
+  termYears?: number;
 }
 
 export interface Refinance {
@@ -90,8 +121,6 @@ export interface DealAssumptions {
   closing: ClosingCosts;
   purchaseLoan: PurchaseLoan;
   rehabLoan: RehabLoan;
-  /** Origination points, applied to total loans (the sheet's convention). */
-  pointsPct: number;
   /** Carrying costs. Taxes and insurance are annual and feed OpEx too. */
   holding: {
     propertyTaxYr: number;
@@ -135,14 +164,15 @@ export function interestOnly(principal: number, ratePct: number, months: number)
   return (principal * (ratePct / 100) * months) / 12;
 }
 
-export function closingItemsTotal(items: ClosingItems): number {
-  return closingItemKeys.reduce((sum, key) => sum + (items[key] || 0), 0);
+export function closingItemsTotal(items: ClosingItems, extras: CustomLine[] = []): number {
+  const standard = closingItemKeys.reduce((sum, key) => sum + (items[key] || 0), 0);
+  return extras.reduce((sum, line) => sum + (line.amount || 0), standard);
 }
 
 export function closingEstimate(closing: ClosingCosts, purchasePrice: number): number {
   return closing.mode === "percent"
     ? purchasePrice * (closing.pct / 100)
-    : closingItemsTotal(closing.items);
+    : closingItemsTotal(closing.items, closing.extras);
 }
 
 /** Closing costs for the deal: what was paid if known, the estimate otherwise. */
@@ -175,8 +205,11 @@ export function loanBreakdown(i: DealInputs): LoanBreakdown {
   const purchaseLoan =
     i.purchaseLoan.kind === "cash" ? 0 : i.purchasePrice * (i.purchaseLoan.ltvPct / 100);
   const rehabLoan = rehabTotal(i) * (i.rehabLoan.financedPct / 100);
-  const totalLoans = purchaseLoan + rehabLoan;
-  return { purchaseLoan, rehabLoan, totalLoans, points: totalLoans * (i.pointsPct / 100) };
+  // Each loan carries its own origination. At an equal percentage this is the
+  // same total the sheet's flip tabs get by charging points on all the loans.
+  const points =
+    feeAmount(i.purchaseLoan.points, purchaseLoan) + feeAmount(i.rehabLoan.points, rehabLoan);
+  return { purchaseLoan, rehabLoan, totalLoans: purchaseLoan + rehabLoan, points };
 }
 
 /** Carrying costs other than interest, over the rehab period. */
@@ -227,6 +260,22 @@ export function purchaseLoanPayment(i: DealInputs): number {
     default:
       return amortizedPayment(purchaseLoan, i.purchaseLoan.ratePct, i.purchaseLoan.termYears);
   }
+}
+
+/** The rehab loan's monthly cost: P&I when it is amortized, interest alone otherwise. */
+export function rehabLoanPayment(i: DealInputs): number {
+  const { rehabLoan } = loanBreakdown(i);
+  return i.rehabLoan.termYears
+    ? amortizedPayment(rehabLoan, i.rehabLoan.ratePct, i.rehabLoan.termYears)
+    : interestOnly(rehabLoan, i.rehabLoan.ratePct, 1);
+}
+
+/**
+ * Monthly debt service before any refinance — the sheet's "החזר משכנתא חודשי
+ * (P&I) · של כלל ההלוואות" on the 188 Kendall Ave tab.
+ */
+export function debtServiceBeforeRefi(i: DealInputs): number {
+  return purchaseLoanPayment(i) + rehabLoanPayment(i);
 }
 
 // ── scenarios ───────────────────────────────────────────────────────────────
@@ -298,6 +347,7 @@ export interface RefinanceResult {
 export interface BrrrrResult extends LoanBreakdown {
   closing: number;
   rehabTotal: number;
+  /** Monthly debt service before a refinance — both loans together. */
   purchasePayment: number;
   /**
    * Interest over the rehab period. The sheet leaves this out of "cash needed";
@@ -329,7 +379,7 @@ export function evaluateBrrrr(i: DealInputs): BrrrrResult {
   const loans = loanBreakdown(i);
   const closing = closingCostsTotal(i);
   const rt = rehabTotal(i);
-  const purchasePayment = purchaseLoanPayment(i);
+  const purchasePayment = debtServiceBeforeRefi(i);
   const opex = operatingExpenses(i);
   const goi = grossOperatingIncome(i);
   const noi = goi - opex;
@@ -413,35 +463,98 @@ export const emptyClosingItems: ClosingItems = {
 };
 
 /**
- * The sheet's own defaults, shaped to a property's financing. This is what a
- * new deal starts from and what "אפס לברירת מחדל" returns to.
+ * The closing costs the investor's title company charges on a Pittsburgh deal.
+ * This exact set repeats, to the cent, on three of the six tabs in "מחשבון
+ * עסקה" — including 188 Kendall Ave — so it is what a new deal starts from.
+ * Total: $6,919.40.
  */
-export function defaultAssumptions(p: Pick<Property, "financing" | "monthlyRent">): DealAssumptions {
-  const { kind } = p.financing;
-  const hardMoney = kind === "hard-money";
-  const cash = kind === "cash";
+export const defaultClosingItems: ClosingItems = {
+  titleInsurance: 1_472.4,
+  closingProtectionLetter: 125,
+  endorsements: 0,
+  settlement: 220,
+  recording: 400,
+  transferTax: 1_937,
+  adminFee: 495,
+  schoolTaxProration: 0,
+  inspection: 450,
+  docPrep: 195,
+  courier: 50,
+  bringdown: 25,
+  buyerBrokerFee: 1_550,
+};
+
+/**
+ * The assumptions every new deal starts from, before anything is known about
+ * the property. The investor edits these once on the "ברירות מחדל" screen; the
+ * stored copy, not this constant, is what the app actually reads.
+ */
+export function builtInAssumptions(): DealAssumptions {
   return {
     contingencyPct: 15,
     rehabMonths: 6,
-    closing: { mode: "percent", pct: 3 },
+    closing: { mode: "itemized", items: { ...defaultClosingItems }, extras: [] },
     purchaseLoan: {
-      kind,
-      ltvPct: cash ? 0 : (p.financing.ltcPct ?? 75),
-      ratePct: p.financing.ratePct ?? (hardMoney ? 12 : 7),
+      kind: "hard-money",
+      ltvPct: 80,
+      ratePct: 12,
       termYears: 30,
+      points: { mode: "percent", pct: 2 },
     },
     rehabLoan: {
-      financedPct: hardMoney ? 100 : 0,
-      ratePct: hardMoney ? (p.financing.ratePct ?? 12) : 12,
+      financedPct: 100,
+      ratePct: 12,
+      points: { mode: "percent", pct: 2 },
     },
-    pointsPct: p.financing.points ?? (hardMoney ? 2 : 0),
     holding: { propertyTaxYr: 1_800, insuranceYr: 1_200, utilitiesMo: 200, yardSnowMo: 100 },
     sale: { agentPct: 6, otherPct: 2 },
-    income: { monthlyRent: p.monthlyRent ?? 0, vacancyPct: 8 },
+    income: { monthlyRent: 0, vacancyPct: 8 },
     opex: { managementPct: 10, hoaMo: 0, maintenancePct: 5, capexPct: 5 },
     refinance: { ltvPct: 75, ratePct: 7.6, termYears: 30, closingPct: 2, seasoningMonths: 6 },
     reservesMonths: 3,
   };
+}
+
+/**
+ * Fit a template to one property: its lender, its rate, its rent. A cash
+ * purchase borrows nothing; anything but hard money repays the rehab loan on
+ * the same amortized note as the purchase, the way the 188 Kendall Ave tab
+ * does.
+ */
+export function shapeForProperty(
+  template: DealAssumptions,
+  p: Pick<Property, "financing" | "monthlyRent">,
+): DealAssumptions {
+  const { kind, ratePct, points, ltcPct } = p.financing;
+  const hardMoney = kind === "hard-money";
+  const cash = kind === "cash";
+  const rate = ratePct ?? (hardMoney ? template.purchaseLoan.ratePct : 7);
+  const fee: Fee =
+    points !== undefined ? { mode: "percent", pct: points } : template.purchaseLoan.points;
+
+  return {
+    ...template,
+    purchaseLoan: {
+      ...template.purchaseLoan,
+      kind,
+      ltvPct: cash ? 0 : (ltcPct ?? template.purchaseLoan.ltvPct),
+      ratePct: rate,
+      points: cash ? { mode: "amount", amount: 0 } : fee,
+    },
+    rehabLoan: {
+      ...template.rehabLoan,
+      financedPct: hardMoney ? template.rehabLoan.financedPct : 0,
+      ratePct: rate,
+      points: cash ? { mode: "amount", amount: 0 } : fee,
+      termYears: hardMoney ? undefined : template.purchaseLoan.termYears,
+    },
+    income: { ...template.income, monthlyRent: p.monthlyRent ?? 0 },
+  };
+}
+
+/** The built‑in template shaped to a property — what the seed data uses. */
+export function defaultAssumptions(p: Pick<Property, "financing" | "monthlyRent">): DealAssumptions {
+  return shapeForProperty(builtInAssumptions(), p);
 }
 
 const assumptionKeys: (keyof DealAssumptions)[] = [
@@ -450,7 +563,6 @@ const assumptionKeys: (keyof DealAssumptions)[] = [
   "closing",
   "purchaseLoan",
   "rehabLoan",
-  "pointsPct",
   "holding",
   "sale",
   "income",
@@ -493,7 +605,10 @@ export function applyInputsToProperty(p: Property, i: DealInputs): Property {
     financing: {
       kind: i.purchaseLoan.kind,
       ratePct: i.purchaseLoan.kind === "cash" ? undefined : i.purchaseLoan.ratePct,
-      points: i.pointsPct > 0 ? i.pointsPct : undefined,
+      points:
+        i.purchaseLoan.points.mode === "percent" && i.purchaseLoan.points.pct > 0
+          ? i.purchaseLoan.points.pct
+          : undefined,
       ltcPct: i.purchaseLoan.kind === "cash" ? undefined : i.purchaseLoan.ltvPct,
       amount: i.purchaseLoan.kind === "cash" ? undefined : loanBreakdown(i).totalLoans,
     },

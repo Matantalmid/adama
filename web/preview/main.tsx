@@ -5,6 +5,7 @@ import DashboardPage from "@/app/page";
 import PropertiesPage from "@/app/properties/page";
 import ArvPage from "@/app/arv/page";
 import CalculatorsPage from "@/app/calculators/page";
+import DefaultsPage from "@/app/defaults/page";
 import ComparePage from "@/app/compare/page";
 import MorePage from "@/app/more/page";
 import NewPropertyPage from "@/app/properties/new/page";
@@ -91,6 +92,8 @@ function Router() {
       return <ArvPage />;
     case "/more":
       return <MorePage />;
+    case "/defaults":
+      return <DefaultsPage />;
     default:
       return <DashboardPage />;
   }

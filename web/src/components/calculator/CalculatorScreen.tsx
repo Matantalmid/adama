@@ -8,16 +8,10 @@ import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
 import { activePropertyId, expenseLedger } from "@/data/portfolio";
 import type { Property } from "@/data/types";
-import {
-  assumptionsOf,
-  compareScenarios,
-  defaultAssumptions,
-  inputsFromProperty,
-  type DealInputs,
-} from "@/lib/calc";
+import { compareScenarios, inputsFromProperty, shapeForProperty, type DealInputs } from "@/lib/calc";
 import { stageLabels, strategyLabels } from "@/lib/labels";
 import { actions } from "@/store";
-import { useExpenses, useProperties, useProperty } from "@/store/hooks";
+import { useDefaults, useDraft, useExpenses, useProperties, useProperty } from "@/store/hooks";
 
 import { ArvCircles } from "./ArvCircles";
 import { DealInputsForm } from "./DealInputsForm";
@@ -85,8 +79,9 @@ export function CalculatorScreen({ propertyId }: { propertyId?: string }) {
 }
 
 function CalculatorBody({ property }: { property: Property }) {
+  const defaults = useDefaults();
   const saved = useMemo(() => inputsFromProperty(property), [property]);
-  const [inputs, setInputs] = useState<DealInputs>(saved);
+  const [inputs, setInputs] = useDraft<DealInputs>(saved);
   const comparison = useMemo(() => compareScenarios(inputs), [inputs]);
   const dirty = useMemo(() => JSON.stringify(inputs) !== JSON.stringify(saved), [inputs, saved]);
   const stage = stageLabels[property.stage];
@@ -97,8 +92,9 @@ function CalculatorBody({ property }: { property: Property }) {
   function discard() {
     setInputs(saved);
   }
-  function sheetDefaults() {
-    setInputs({ ...inputs, ...defaultAssumptions(property), closing: inputs.closing });
+  /** Back to the template on the "ברירות מחדל" screen, keeping the deal's facts. */
+  function resetToDefaults() {
+    setInputs({ ...inputs, ...shapeForProperty(defaults, property) });
   }
 
   return (
@@ -117,8 +113,11 @@ function CalculatorBody({ property }: { property: Property }) {
           </p>
         </div>
         <div className={styles.actions}>
-          <button type="button" className="btn btn-secondary" onClick={sheetDefaults}>
-            ברירות המחדל של הגיליון
+          <Link href="/defaults" className="btn btn-secondary">
+            ערוך ברירות מחדל
+          </Link>
+          <button type="button" className="btn btn-secondary" onClick={resetToDefaults}>
+            אפס לברירת מחדל
           </button>
           {dirty ? (
             <button type="button" className="btn btn-secondary" onClick={discard}>
@@ -162,6 +161,4 @@ function CalculatorBody({ property }: { property: Property }) {
   );
 }
 
-// Keep the helper referenced for the store's assumptions shape.
 export type { DealInputs };
-void assumptionsOf;

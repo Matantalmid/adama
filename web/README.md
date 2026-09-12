@@ -34,6 +34,7 @@ the screens can change things.
 | Property overview | `/properties/[id]` | 2a desktop, 2c phone |
 | Project expenses | `/properties/[id]/expenses` | 3a desktop, phone list |
 | **BRRRR vs Fix & Flip calculator** | `/calculators`, `/properties/[id]/calculator` | 2b's matrix and circles; formulas from the spreadsheet |
+| **Deal defaults** | `/defaults` | the values every new deal starts from |
 | New expense — scanned or manual | phone camera button; "+ הוצאה" on the ledger | 3c |
 
 Not yet built, because they were not designed: property comparison (six axes
@@ -54,9 +55,35 @@ cash‑on‑cash, cap rate, DSCR and the 1% rule. `scripts/calc.test.ts` pins th
 module to the sheet's own totals (`npm test`, plain `node --test`; Node strips
 the types itself).
 
+The sheet has six tabs — מחשבון פליפ · מחשבון רנטל · 188 Kendall Ave ·
+415 Shcool N st · 123 Olancha Ave · 534 Clifton Ave — and the module covers all
+three shapes they take: a flip, a BRRRR with a cash‑out refinance, and a
+buy‑and‑hold. Origination is per loan and can be a percentage or a flat amount;
+a rehab loan is either interest‑only over the rehab period (hard money) or
+amortized alongside the purchase note; and the itemized closing list takes
+extra lines a single deal needs, the way the sheet's tabs do.
+
 One place the module deliberately shows more than the sheet: the sheet leaves
 rehab‑period interest out of "cash needed". The matrix has a row for it,
 marked as such, so the investor can decide.
+
+### Every parameter explains itself
+
+`src/lib/glossary.ts` is the sheet's own **הערות** column, transcribed across
+all six tabs. Every field in the form and every row of the comparison matrix
+carries a "?" that shows its explanation on hover, on keyboard focus, and on
+tap — and the same text reaches screen readers through the field's
+`aria-describedby`, so it is announced with the field rather than as a stray
+tooltip.
+
+### Defaults, and what a single deal overrides
+
+`/defaults` holds one `DealAssumptions` template: the title company's standard
+fees, the lender's usual terms, the vacancy and maintenance ratios, the cost of
+sale. Every new deal starts from it and "אפס לברירת מחדל" in the calculator
+returns to it. The closing kit ships with the Pittsburgh figures that repeat
+identically on three of the six tabs ($6,919.40). A deal overrides any of it
+without touching the template, and can add closing lines of its own.
 
 ### Actuals on the property, projections in `assumptions`
 
@@ -68,6 +95,15 @@ ratios, refinance terms, cost of sale) and is what the calculator edits.
 Nothing projected is stored: the property page's outcome cards and the
 dashboard's "רווח צפוי" column call the same functions the calculator does,
 so a save in the calculator changes both.
+
+### 188 Kendall Ave
+
+The investor's own deal, seeded from its tab: Pittsburgh PA 15202, 4/2,
+1,800 sqft, built 1915, ten comps. A buy‑and‑hold at $115,000 with a $120,000
+rehab against a $330,000 ARV — 20% down on a 30‑year note, no refinance,
+origination entered as flat dollars. `scripts/calc.test.ts` pins the calculator
+to the tab: NOI $1,510 · P&I $612 · cash flow $898 · CoC 7.00% · cap 15.76% ·
+DSCR 2.47 · reserves $3,930 · cash needed $153,854.
 
 ### Elm Ave under the investor's model
 
@@ -101,6 +137,12 @@ spend together, keeping the seed's invariant that the categories sum to the
 rehab spent. A version mismatch reseeds — bump `STORE_VERSION` when the shape
 of `assumptions` changes.
 
+One consequence worth knowing before you write a screen: because the seed is
+what React renders during hydration and the stored state arrives a beat later,
+a draft seeded once with `useState` would freeze the seed and silently discard
+what was saved. `useDraft` in `store/hooks.ts` adopts the store's value when it
+changes, unless the user has already typed — use it for anything editable.
+
 ## How it is organised
 
 ```
@@ -111,10 +153,10 @@ src/
     dashboard/       dashboard + list screens, properties table, phone cards
     property/        overview, tabs, budget-vs-actual, BRRRR timeline
     expenses/        ledger with filters, new-expense sheet, category chips
-    calculator/      assumptions form, scenario matrix, ARV circles
-    ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText
+    calculator/      assumptions form, scenario matrix, ARV circles, defaults screen
+    ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText, InfoTip
   data/              types + seed data from the mockups
-  lib/               calc.ts (the spreadsheet), deal.ts (portfolio helpers), format, labels
+  lib/               calc.ts (the spreadsheet), glossary.ts (its notes), deal.ts, format, labels
   store/             localStorage store and hooks
   styles/organic.css the design system, copied verbatim from the handoff
 scripts/calc.test.ts the spreadsheet's totals as tests

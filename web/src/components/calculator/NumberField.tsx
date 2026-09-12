@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { InfoTip } from "@/components/ui/InfoTip";
+
 import styles from "./Calculator.module.css";
 
 const display = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
@@ -19,6 +21,8 @@ export function NumberField({
   onChange,
   unit,
   hint,
+  info,
+  infoAlign,
   min = 0,
   disabled,
 }: {
@@ -28,7 +32,11 @@ export function NumberField({
   onChange: (value: number) => void;
   /** Shown after the number: $, %, חודשים, שנים, $ לשנה, $ לחודש. */
   unit?: string;
+  /** A short nudge under the field, for things that guide entry. */
   hint?: string;
+  /** The full explanation, behind a "?" beside the label. */
+  info?: string;
+  infoAlign?: "start" | "end";
   min?: number;
   disabled?: boolean;
 }) {
@@ -42,10 +50,16 @@ export function NumberField({
 
   return (
     <div className={`field ${styles.field}`}>
-      <label htmlFor={id}>{label}</label>
+      {/* The design system makes .field > label a block, so the label and its
+          "?" need their own row to sit side by side. */}
+      <div className={styles.labelRow}>
+        <label htmlFor={id}>{label}</label>
+        {info ? <InfoTip id={`${id}-tip`} text={info} label={label} align={infoAlign} /> : null}
+      </div>
       <div className={styles.numWrap}>
         <input
           id={id}
+          aria-describedby={info ? `${id}-tip` : undefined}
           className={`input ${styles.numInput}`}
           type="text"
           inputMode="decimal"

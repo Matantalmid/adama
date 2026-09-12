@@ -1,5 +1,5 @@
 import type { Expense, Property } from "@/data/types";
-import { applyInputsToProperty, type DealInputs } from "@/lib/calc";
+import { applyInputsToProperty, type DealAssumptions, type DealInputs } from "@/lib/calc";
 
 import { migrate, seedState, type StoreState } from "./schema";
 import { clearStored, readStored, writeStored } from "./storage";
@@ -132,6 +132,11 @@ export const actions = {
         };
       }),
     }));
+  },
+
+  /** Replace the template every new deal starts from. */
+  saveDefaults(defaults: DealAssumptions): void {
+    setState((s) => ({ ...s, defaults }));
   },
 
   saveDealInputs(propertyId: string, inputs: DealInputs): void {

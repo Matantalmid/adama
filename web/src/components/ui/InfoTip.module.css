@@ -1,0 +1,91 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+
+.button {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 42%, transparent);
+  cursor: help;
+}
+
+.button:hover,
+.button:focus-visible,
+.wrap[data-open="true"] .button {
+  color: var(--color-accent);
+}
+
+/* The bubble. Hidden from everyone — including screen readers, which get the
+   text through the field's aria-describedby instead — until it is called for. */
+.bubble {
+  position: absolute;
+  z-index: 40;
+  bottom: calc(100% + 8px);
+  inset-inline-start: -10px;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 32px));
+  padding: 9px 12px;
+  border-radius: 14px;
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-100);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: start;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  /* Absolutely positioned elements still count toward the document's scroll
+     width, and a page carries dozens of these — so a closed bubble is taken
+     out of the layout entirely, not merely hidden. */
+  display: none;
+}
+
+.wrap:hover .bubble,
+.button:focus-visible + .bubble,
+.wrap[data-open="true"] .bubble {
+  display: block;
+}
+
+/* A little tail, pointing back at the icon. */
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  inset-inline-start: 14px;
+  border: 5px solid transparent;
+  border-top-color: var(--color-neutral-900);
+}
+
+/* Near the end of a row the bubble would run off the edge, so it hangs the
+   other way. */
+.end .bubble {
+  inset-inline-start: auto;
+  inset-inline-end: -10px;
+}
+
+.end .bubble::after {
+  inset-inline-start: auto;
+  inset-inline-end: 14px;
+}
+
+/* One column on a phone puts every icon near the same edge, so the flipped
+   anchoring the desktop grid needs would push the bubble off-screen instead. */
+@media (max-width: 899px) {
+  .end .bubble {
+    inset-inline-start: -10px;
+    inset-inline-end: auto;
+  }
+
+  .end .bubble::after {
+    inset-inline-start: 14px;
+    inset-inline-end: auto;
+  }
+}

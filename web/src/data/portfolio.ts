@@ -1,4 +1,4 @@
-import { defaultAssumptions, type DealAssumptions } from "../lib/calc.ts";
+import { defaultAssumptions, defaultClosingItems, type DealAssumptions } from "../lib/calc.ts";
 import type {
   AttentionItem,
   Expense,
@@ -41,6 +41,7 @@ function assume(
 
 const hardMoney: Financing = { kind: "hard-money", ratePct: 10.5, points: 2, ltcPct: 80 };
 const dscr: Financing = { kind: "dscr", ratePct: 7.6, ltcPct: 75 };
+const conventional: Financing = { kind: "conventional", ratePct: 7, ltcPct: 80 };
 const cash: Financing = { kind: "cash" };
 
 export const properties: Property[] = [
@@ -83,9 +84,14 @@ export const properties: Property[] = [
     assumptions: assume(hardMoney, 1_450, {
       contingencyPct: 0,
       rehabMonths: 7,
-      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
-      rehabLoan: { financedPct: 80, ratePct: 10.5 },
-      pointsPct: 2,
+      purchaseLoan: {
+        kind: "hard-money",
+        ltvPct: 80,
+        ratePct: 10.5,
+        termYears: 30,
+        points: { mode: "percent", pct: 2 },
+      },
+      rehabLoan: { financedPct: 80, ratePct: 10.5, points: { mode: "percent", pct: 2 } },
       holding: { propertyTaxYr: 1_800, insuranceYr: 1_080, utilitiesMo: 300, yardSnowMo: 103 },
     }),
 
@@ -148,9 +154,14 @@ export const properties: Property[] = [
     assumptions: assume(hardMoney, 1_900, {
       contingencyPct: 0,
       rehabMonths: 6,
-      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
-      rehabLoan: { financedPct: 80, ratePct: 10.5 },
-      pointsPct: 2,
+      purchaseLoan: {
+        kind: "hard-money",
+        ltvPct: 80,
+        ratePct: 10.5,
+        termYears: 30,
+        points: { mode: "percent", pct: 2 },
+      },
+      rehabLoan: { financedPct: 80, ratePct: 10.5, points: { mode: "percent", pct: 2 } },
       holding: { propertyTaxYr: 2_200, insuranceYr: 1_200, utilitiesMo: 400, yardSnowMo: 100 },
     }),
 
@@ -185,9 +196,14 @@ export const properties: Property[] = [
     assumptions: assume(dscr, 1_350, {
       contingencyPct: 0,
       rehabMonths: 6,
-      purchaseLoan: { kind: "dscr", ltvPct: 75, ratePct: 7.6, termYears: 30 },
-      rehabLoan: { financedPct: 0, ratePct: 12 },
-      pointsPct: 0,
+      purchaseLoan: {
+        kind: "dscr",
+        ltvPct: 75,
+        ratePct: 7.6,
+        termYears: 30,
+        points: { mode: "percent", pct: 0 },
+      },
+      rehabLoan: { financedPct: 0, ratePct: 12, points: { mode: "percent", pct: 0 } },
       holding: { propertyTaxYr: 1_800, insuranceYr: 1_000, utilitiesMo: 300, yardSnowMo: 100 },
     }),
 
@@ -216,9 +232,14 @@ export const properties: Property[] = [
     assumptions: assume(dscr, 2_100, {
       contingencyPct: 0,
       rehabMonths: 6,
-      purchaseLoan: { kind: "dscr", ltvPct: 75, ratePct: 7.6, termYears: 30 },
-      rehabLoan: { financedPct: 0, ratePct: 12 },
-      pointsPct: 0,
+      purchaseLoan: {
+        kind: "dscr",
+        ltvPct: 75,
+        ratePct: 7.6,
+        termYears: 30,
+        points: { mode: "percent", pct: 0 },
+      },
+      rehabLoan: { financedPct: 0, ratePct: 12, points: { mode: "percent", pct: 0 } },
       holding: { propertyTaxYr: 2_200, insuranceYr: 1_200, utilitiesMo: 400, yardSnowMo: 100 },
     }),
 
@@ -248,9 +269,14 @@ export const properties: Property[] = [
     assumptions: assume(hardMoney, 1_100, {
       contingencyPct: 0,
       rehabMonths: 4,
-      purchaseLoan: { kind: "hard-money", ltvPct: 80, ratePct: 10.5, termYears: 30 },
-      rehabLoan: { financedPct: 80, ratePct: 10.5 },
-      pointsPct: 2,
+      purchaseLoan: {
+        kind: "hard-money",
+        ltvPct: 80,
+        ratePct: 10.5,
+        termYears: 30,
+        points: { mode: "percent", pct: 2 },
+      },
+      rehabLoan: { financedPct: 80, ratePct: 10.5, points: { mode: "percent", pct: 2 } },
       holding: { propertyTaxYr: 2_000, insuranceYr: 1_000, utilitiesMo: 750, yardSnowMo: 150 },
     }),
 
@@ -284,6 +310,66 @@ export const properties: Property[] = [
     // Contingency stays at 0 so the MAO the mockups show ($77,500) holds;
     // the calculator is where the investor adds it back.
     assumptions: assume(cash, 1_250, { contingencyPct: 0 }),
+  },
+  {
+    id: "kendall-ave",
+    shortName: "Kendall Ave",
+    address: "188 Kendall Ave",
+    city: "Pittsburgh",
+    state: "PA",
+    zip: "15202",
+    strategy: "BRRRR",
+    // Still being underwritten — "בחוזה" is the closest stage the app has for a
+    // deal that is priced but not yet closed.
+    stage: "under-contract",
+    beds: 4,
+    baths: 2,
+    sqft: 1_800,
+    yearBuilt: 1915,
+
+    purchasePrice: 115_000,
+    closingCosts: 0,
+    rehabBudget: 120_000,
+    rehabSpent: 0,
+
+    arv: 330_000,
+    compCount: 10,
+
+    financing: { kind: "conventional", ratePct: 7, ltcPct: 80 },
+    monthlyRent: 2_400,
+
+    // The investor's own numbers, from the "188 Kendall Ave" tab of
+    // "מחשבון עסקה": a buy‑and‑hold with no refinance, both loans on 30‑year
+    // notes, origination entered as flat dollars. Reproduces the tab exactly —
+    // NOI $1,510 · P&I $612 · cash flow $898 · CoC 7.00% · cap 15.76% ·
+    // DSCR 2.47 · reserves $3,930 · cash needed $153,854 (scripts/calc.test.ts).
+    assumptions: assume(conventional, 2_400, {
+      contingencyPct: 0,
+      rehabMonths: 6,
+      closing: { mode: "itemized", items: { ...defaultClosingItems }, extras: [] },
+      purchaseLoan: {
+        kind: "conventional",
+        ltvPct: 80,
+        ratePct: 7,
+        termYears: 30,
+        points: { mode: "amount", amount: 2 },
+      },
+      rehabLoan: {
+        financedPct: 0,
+        ratePct: 7,
+        termYears: 30,
+        points: { mode: "amount", amount: 2 },
+      },
+      // The tab carries taxes at $28/month and insurance at $70/month.
+      holding: { propertyTaxYr: 336, insuranceYr: 840, utilitiesMo: 200, yardSnowMo: 100 },
+      income: { monthlyRent: 2_400, vacancyPct: 8 },
+      // Maintenance is the tab's own $240 on $2,400 of rent — its note says 5%,
+      // its number is 10%; the number wins.
+      opex: { managementPct: 10, hoaMo: 0, maintenancePct: 10, capexPct: 5 },
+      refinance: undefined,
+    }),
+
+    note: "בבדיקה · 10 comps",
   },
 ];
 

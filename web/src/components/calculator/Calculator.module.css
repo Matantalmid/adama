@@ -68,6 +68,22 @@
   justify-content: flex-end;
 }
 
+.defaultsTitle {
+  margin: 0;
+  font-size: 34px;
+}
+
+.defaultsSummary {
+  margin: 0;
+  padding: 14px 20px;
+  font-size: 14px;
+}
+
+/* The defaults form is a single column of cards, not a sidebar. */
+.defaultsForm {
+  max-width: 560px;
+}
+
 /* ── layout ── */
 .layout {
   display: grid;
@@ -139,6 +155,76 @@
   min-width: 0;
 }
 
+/* Label and its "?" on one line; the global .field > label is a block. */
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.labelRow > label {
+  margin-bottom: 0;
+}
+
+/* A legend cannot hold a button, so the section's "?" rides beside it. */
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.legendRow > .legend {
+  margin-bottom: 0;
+}
+
+/* ── custom closing lines ── */
+.extras {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.extraRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+.extraAmount {
+  direction: ltr;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.extraRemove {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--color-divider);
+  border-radius: 50%;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.extraRemove:hover {
+  border-color: var(--color-accent-700);
+  color: var(--color-accent-700);
+}
+
+.addExtra {
+  align-self: flex-start;
+  font-size: 12.5px;
+  border-style: dashed;
+}
+
 /* The input is left‑to‑right whatever the page direction, so the wrapper is
    too — that puts the unit after the digits, at the physical right. */
 .numWrap {
@@ -170,6 +256,23 @@
 
 .echo {
   font-size: 12.5px;
+}
+
+.note {
+  margin: -2px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.subLabel {
+  font-size: 12px;
+}
+
+/* A control and the field it governs, kept together. */
+.splitField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .itemized {
@@ -298,6 +401,12 @@
 
 .cellLabel {
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.rowLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .winner {

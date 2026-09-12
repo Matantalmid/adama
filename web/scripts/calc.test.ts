@@ -54,9 +54,14 @@ describe("Flip tab — מחשבון פליפ, first deal", () => {
         inspection: 450,
       },
     },
-    purchaseLoan: { kind: "hard-money", ltvPct: 0, ratePct: 12, termYears: 30 },
-    rehabLoan: { financedPct: 100, ratePct: 12 },
-    pointsPct: 2,
+    purchaseLoan: {
+      kind: "hard-money",
+      ltvPct: 0,
+      ratePct: 12,
+      termYears: 30,
+      points: { mode: "percent", pct: 2 },
+    },
+    rehabLoan: { financedPct: 100, ratePct: 12, points: { mode: "percent", pct: 2 } },
     holding: { propertyTaxYr: 2_000, insuranceYr: 1_200, utilitiesMo: 200, yardSnowMo: 100 },
     sale: { agentPct: 6, otherPct: 2 },
     income: { monthlyRent: 0, vacancyPct: 0 },
@@ -108,9 +113,14 @@ describe("BRRRR tab — מחשבון עסקה, rental with refinance", () => {
         buyerBrokerFee: 1_550,
       },
     },
-    purchaseLoan: { kind: "dscr", ltvPct: 75, ratePct: 7, termYears: 30 },
-    rehabLoan: { financedPct: 0, ratePct: 12 },
-    pointsPct: 2,
+    purchaseLoan: {
+      kind: "dscr",
+      ltvPct: 75,
+      ratePct: 7,
+      termYears: 30,
+      points: { mode: "percent", pct: 2 },
+    },
+    rehabLoan: { financedPct: 0, ratePct: 12, points: { mode: "percent", pct: 2 } },
     // The sheet enters taxes 340/mo and insurance 110/mo; here they are annual.
     holding: { propertyTaxYr: 4_080, insuranceYr: 1_320, utilitiesMo: 0, yardSnowMo: 0 },
     sale: { agentPct: 6, otherPct: 2 },
@@ -149,6 +159,47 @@ describe("BRRRR tab — מחשבון עסקה, rental with refinance", () => {
     near(r.capRatePct, 13.03, 0.01);
     near(r.dscr, 1.06, 0.01);
     near(r.onePercentRulePct, 1.2, 0.01);
+  });
+});
+
+describe("188 Kendall Ave — the tab the investor pointed at", () => {
+  const property = getProperty("kendall-ave");
+  assert.ok(property);
+  const inputs = inputsFromProperty(property);
+  const r = evaluateBrrrr(inputs);
+
+  it("financing: 20% down on a 30‑year note, nothing borrowed for the rehab", () => {
+    near(r.purchaseLoan, 92_000);
+    near(r.rehabLoan, 0);
+    // Origination entered as flat dollars on each loan.
+    near(r.points, 4);
+    near(r.closing, 6_919.4, 0.05);
+  });
+
+  it("income and operating expenses", () => {
+    near(r.goi, 2_208);
+    near(r.opex, 698);
+    near(r.noi, 1_510);
+  });
+
+  it("debt service covers both loans, and reserves follow it", () => {
+    near(r.purchasePayment, 612, 0.6);
+    near(r.reserves, 3_930, 1);
+    near(r.totalCashNeeded, 153_854, 1);
+  });
+
+  it("buy‑and‑hold: no refinance, all the cash stays in", () => {
+    assert.equal(r.refinance, null);
+    near(r.cashLeftInDeal, 153_854, 1);
+  });
+
+  it("the metrics the tab reports", () => {
+    near(r.monthlyCashFlow, 898, 0.6);
+    near(r.annualCashFlow, 10_775, 6);
+    near(r.cashOnCashPct, 7.0, 0.02);
+    near(r.capRatePct, 15.76, 0.02);
+    near(r.dscr, 2.47, 0.01);
+    near(r.onePercentRulePct, 0.99, 0.01);
   });
 });
 
