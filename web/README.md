@@ -76,6 +76,38 @@ tap — and the same text reaches screen readers through the field's
 `aria-describedby`, so it is announced with the field rather than as a stray
 tooltip.
 
+### How it is arranged, and why
+
+Correct numbers are not the same as readable ones, so the screen is ordered
+around the question being asked. The results come **first in the DOM** — which
+in RTL is the right-hand, first-read column, and which puts the answer ahead of
+the thirty-odd fields for the tab order and the screen reader as much as for
+the eye. The form is the narrow column beside them.
+
+The nineteen comparison rows are grouped — **התוצאה · המזומן · מדדי השכרה ·
+עלויות ולוח זמנים** — and the four rows in the first group, the ones that decide
+the deal, are set a size up. Rows that do not apply to a strategy show a dash at
+about a fifth of the ink and take neither the winner tint nor its weight, so the
+highlighted column reads as numbers rather than as a painted rectangle.
+
+Two figures carry a threshold the investor's world actually defines, and only
+those two are ever marked: **cash flow** when it is negative, and **DSCR** below
+the 1.2 the glossary names banks want (below 1.0 says so more plainly). A mark
+is dark terracotta *and* a warning triangle *and* a short label — never colour
+alone — and a healthy number gets nothing at all, which is what keeps the two
+marks visible. Those thresholds live in `ScenarioMatrix.tsx`, not in `calc.ts`:
+computing a number and judging it are different jobs.
+
+Cash-on-Cash also shows the annual dollars beneath the percentage; the figure
+was already computed and simply had nowhere to appear.
+
+The form's eight groups are disclosures that start **closed**, each summarised
+by a digest of the values inside it (`$115,000 · ARV $330,000`), so the
+assumptions can be read without being opened and any number of them can be open
+at once. `<legend>` needs a `<fieldset>`, so this trades that grouping semantic
+for a native keyboard-operable disclosure; every field keeps its own label,
+`aria-describedby` and "?".
+
 ### Defaults, and what a single deal overrides
 
 `/defaults` holds one `DealAssumptions` template: the title company's standard

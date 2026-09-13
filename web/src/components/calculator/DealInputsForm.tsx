@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, type ReactNode } from "react";
+
 import { Icon } from "@/components/ui/Icon";
 import { InfoTip } from "@/components/ui/InfoTip";
 import { Num } from "@/components/ui/Num";
@@ -17,7 +19,7 @@ import {
   type Fee,
   type Refinance,
 } from "@/lib/calc";
-import { money } from "@/lib/format";
+import { money, percent } from "@/lib/format";
 import { closingItemNotes, glossary } from "@/lib/glossary";
 
 import { NumberField } from "./NumberField";
@@ -28,9 +30,15 @@ import styles from "./Calculator.module.css";
  * spreadsheet groups them: רכישה ושווי · שיפוץ · מימון · סגירה והחזקה ·
  * מכירה · הכנסות · הוצאות תפעול · מחזור. Every change re‑runs the maths.
  *
- * Every parameter carries a "?" with the sheet's own explanation of it
- * (lib/glossary.ts).
+ * Thirty-odd fields open at once is a wall, so each group is a disclosure that
+ * starts closed and carries a digest of what is inside it — the form can be
+ * read before it is edited. Every parameter still carries a "?" with the
+ * sheet's own explanation of it (lib/glossary.ts).
  */
+
+const groupIds = ["buy", "rehab", "finance", "closing", "sale", "income", "opex", "refi"] as const;
+
+type GroupId = (typeof groupIds)[number];
 
 const kinds: { value: FinancingKind; label: string }[] = [
   { value: "hard-money", label: "Hard money" },
@@ -59,6 +67,9 @@ const rehabRepayments = [
   { value: "amortized", label: "פריסה לשנים" },
 ] as const;
 
+/** 7% and 7.6% — a digest has no room for trailing zeros. */
+const pct = (value: number) => percent(Number(value.toFixed(2)), value % 1 === 0 ? 0 : 2);
+
 const defaultRefinance: Refinance = {
   ltvPct: 75,
   ratePct: 7.6,
@@ -76,10 +87,11 @@ export function DealInputsForm({
   onChange: (next: DealInputs) => void;
   /**
    * "defaults" edits the template behind every new deal, which has no price,
-   * ARV or rehab budget of its own — those fieldsets are hidden.
+   * ARV or rehab budget of its own — that group is hidden.
    */
   scope?: "deal" | "defaults";
 }) {
+  const isDeal = scope === "deal";
   const patch = (partial: Partial<DealInputs>) => onChange({ ...inputs, ...partial });
   const group =
     <K extends "purchaseLoan" | "rehabLoan" | "holding" | "sale" | "income" | "opex">(key: K) =>
@@ -88,17 +100,40 @@ export function DealInputsForm({
   const patchRefi = (partial: Partial<Refinance>) =>
     onChange({ ...inputs, refinance: { ...(inputs.refinance ?? defaultRefinance), ...partial } });
 
+  // Which groups are open. Closed is the default at every width: the digests
+  // are what the form says when nothing is expanded.
+  const [open, setOpen] = useState<Partial<Record<GroupId, boolean>>>({});
+  const toggle = (id: GroupId, value: boolean) =>
+    setOpen((current) => (current[id] === value ? current : { ...current, [id]: value }));
+  const shown = groupIds.filter((id) => isDeal || id !== "buy");
+  const allOpen = shown.every((id) => open[id]);
+  const setAll = (value: boolean) =>
+    setOpen(Object.fromEntries(shown.map((id) => [id, value])) as Record<GroupId, boolean>);
+
   const cash = inputs.purchaseLoan.kind === "cash";
   const hardMoney = inputs.purchaseLoan.kind === "hard-money";
   const closed = inputs.closingActual !== undefined;
-  const isDeal = scope === "deal";
   const rehabAmortized = inputs.rehabLoan.termYears !== undefined;
+  const kindLabel = kinds.find((k) => k.value === inputs.purchaseLoan.kind)?.label ?? "";
 
   return (
     <form className={styles.form} onSubmit={(event) => event.preventDefault()}>
+      <button type="button" className={styles.openAll} onClick={() => setAll(!allOpen)}>
+        {allOpen ? "סגור הכל" : "פתח הכל"}
+      </button>
+
       {isDeal ? (
-        <fieldset className={styles.group}>
-          <legend className={styles.legend}>רכישה ושווי</legend>
+        <Group
+          id="buy"
+          title="רכישה ושווי"
+          open={open.buy}
+          onToggle={toggle}
+          digest={
+            <>
+              <Num>{money(inputs.purchasePrice)}</Num> · <Num>{`ARV ${money(inputs.arv)}`}</Num>
+            </>
+          }
+        >
           <NumberField
             id="f-price"
             label="מחיר רכישה"
@@ -115,11 +150,29 @@ export function DealInputsForm({
             value={inputs.arv}
             onChange={(v) => patch({ arv: v })}
           />
-        </fieldset>
+        </Group>
       ) : null}
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>שיפוץ</legend>
+      <Group
+        id="rehab"
+        title="שיפוץ"
+        open={open.rehab}
+        onToggle={toggle}
+        digest={
+          <>
+            {isDeal ? (
+              <>
+                <Num>{money(rehabTotal(inputs))}</Num> ·{" "}
+              </>
+            ) : (
+              <>
+                בלת&quot;מ <Num>{pct(inputs.contingencyPct)}</Num> ·{" "}
+              </>
+            )}
+            <Num>{inputs.rehabMonths}</Num> חודשים
+          </>
+        }
+      >
         {isDeal ? (
           <NumberField
             id="f-rehab"
@@ -155,10 +208,26 @@ export function DealInputsForm({
             שיפוץ כולל בלת&quot;מ: <Num>{money(rehabTotal(inputs))}</Num>
           </div>
         ) : null}
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>מימון</legend>
+      <Group
+        id="finance"
+        title="מימון"
+        open={open.finance}
+        onToggle={toggle}
+        digest={
+          <>
+            {kindLabel}
+            {cash ? null : (
+              <>
+                {" · "}
+                <Num>{`LTV ${pct(inputs.purchaseLoan.ltvPct)}`}</Num> ·{" "}
+                <Num>{pct(inputs.purchaseLoan.ratePct)}</Num>
+              </>
+            )}
+          </>
+        }
+      >
         <Segmented
           options={kinds}
           value={inputs.purchaseLoan.kind}
@@ -270,10 +339,27 @@ export function DealInputsForm({
             />
           </>
         ) : null}
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>סגירה והחזקה</legend>
+      <Group
+        id="closing"
+        title="סגירה והחזקה"
+        open={open.closing}
+        onToggle={toggle}
+        digest={
+          <>
+            <Num>
+              {money(
+                closed
+                  ? (inputs.closingActual ?? 0)
+                  : closingEstimate(inputs.closing, inputs.purchasePrice),
+              )}
+            </Num>{" "}
+            · מס וביטוח{" "}
+            <Num>{money(inputs.holding.propertyTaxYr + inputs.holding.insuranceYr)}</Num> לשנה
+          </>
+        }
+      >
         {closed ? (
           <div className={`text-muted ${styles.echo}`}>
             עלויות סגירה ששולמו: <Num>{money(inputs.closingActual ?? 0)}</Num>
@@ -374,10 +460,20 @@ export function DealInputsForm({
             onChange={(v) => group("holding")({ yardSnowMo: v })}
           />
         </div>
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>מכירה · Fix &amp; Flip</legend>
+      <Group
+        id="sale"
+        title={<>מכירה · Fix &amp; Flip</>}
+        open={open.sale}
+        onToggle={toggle}
+        digest={
+          <>
+            תיווך <Num>{pct(inputs.sale.agentPct)}</Num> · סגירה{" "}
+            <Num>{pct(inputs.sale.otherPct)}</Num>
+          </>
+        }
+      >
         <div className={styles.row2}>
           <NumberField
             id="f-agent"
@@ -397,10 +493,24 @@ export function DealInputsForm({
             onChange={(v) => group("sale")({ otherPct: v })}
           />
         </div>
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>הכנסות · BRRRR</legend>
+      <Group
+        id="income"
+        title={<>הכנסות · BRRRR</>}
+        open={open.income}
+        onToggle={toggle}
+        digest={
+          <>
+            {isDeal ? (
+              <>
+                <Num>{money(inputs.income.monthlyRent)}</Num> לחודש ·{" "}
+              </>
+            ) : null}
+            תפוסה ריקה <Num>{pct(inputs.income.vacancyPct)}</Num>
+          </>
+        }
+      >
         <div className={styles.row2}>
           <NumberField
             id="f-rent"
@@ -420,10 +530,21 @@ export function DealInputsForm({
             onChange={(v) => group("income")({ vacancyPct: v })}
           />
         </div>
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>הוצאות תפעול</legend>
+      <Group
+        id="opex"
+        title="הוצאות תפעול"
+        open={open.opex}
+        onToggle={toggle}
+        digest={
+          <>
+            ניהול <Num>{pct(inputs.opex.managementPct)}</Num> · תחזוקה{" "}
+            <Num>{pct(inputs.opex.maintenancePct)}</Num> ·{" "}
+            <Num>{`CapEx ${pct(inputs.opex.capexPct)}`}</Num>
+          </>
+        }
+      >
         <div className={styles.row2}>
           <NumberField
             id="f-mgmt"
@@ -469,10 +590,26 @@ export function DealInputsForm({
           </Num>{" "}
           לחודש
         </div>
-      </fieldset>
+      </Group>
 
-      <fieldset className={styles.group}>
-        <legend className={styles.legend}>מחזור משכנתא</legend>
+      <Group
+        id="refi"
+        title="מחזור משכנתא"
+        open={open.refi}
+        onToggle={toggle}
+        digest={
+          <>
+            {inputs.refinance ? (
+              <>
+                ריפיננס <Num>{pct(inputs.refinance.ltvPct)}</Num>
+              </>
+            ) : (
+              <Num>Buy &amp; Hold</Num>
+            )}{" "}
+            · רזרבות <Num>{inputs.reservesMonths}</Num> חודשים
+          </>
+        }
+      >
         <Segmented
           options={holdModes}
           value={inputs.refinance ? "brrrr" : "hold"}
@@ -541,8 +678,49 @@ export function DealInputsForm({
           value={inputs.reservesMonths}
           onChange={(v) => patch({ reservesMonths: v })}
         />
-      </fieldset>
+      </Group>
     </form>
+  );
+}
+
+/**
+ * One group of the form. Closed, the summary is the only thing on screen: the
+ * group's name and a digest of the values inside it, so the form can be read
+ * without being opened. Several may be open at once — an accordion that shuts
+ * one group to open another fights comparison.
+ *
+ * `<legend>` wants a `<fieldset>`; this trades that grouping semantic for a
+ * native, keyboard-operable disclosure. Every field keeps its own label,
+ * `aria-describedby` and "?", so nothing an assistive technology reads is lost.
+ */
+function Group({
+  id,
+  title,
+  digest,
+  open,
+  onToggle,
+  children,
+}: {
+  id: GroupId;
+  title: ReactNode;
+  digest: ReactNode;
+  open?: boolean;
+  onToggle: (id: GroupId, open: boolean) => void;
+  children: ReactNode;
+}) {
+  return (
+    <details
+      className={styles.group}
+      open={open ?? false}
+      onToggle={(event) => onToggle(id, event.currentTarget.open)}
+    >
+      <summary className={styles.groupSummary}>
+        <span className={styles.legend}>{title}</span>
+        <span className={`text-muted ${styles.digest}`}>{digest}</span>
+        <Icon name="chevron-down" size={15} className={styles.groupChevron} />
+      </summary>
+      <div className={styles.groupBody}>{children}</div>
+    </details>
   );
 }
 

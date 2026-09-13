@@ -130,14 +130,10 @@ function CalculatorBody({ property }: { property: Property }) {
         </div>
       </header>
 
+      {/* Results first in the DOM: in RTL that is the right-hand, first-read
+          column, and it puts the answer ahead of the thirty fields behind it —
+          for the tab order and the screen reader as much as for the eye. */}
       <div className={styles.layout}>
-        <aside className={styles.inputs}>
-          <details className={styles.inputsDisclosure} open>
-            <summary className={styles.inputsSummary}>עריכת הנחות</summary>
-            <DealInputsForm inputs={inputs} onChange={setInputs} />
-          </details>
-        </aside>
-
         <div className={styles.results}>
           <ArvCircles
             inputs={inputs}
@@ -147,6 +143,13 @@ function CalculatorBody({ property }: { property: Property }) {
           />
           <ScenarioMatrix comparison={comparison} strategy={property.strategy} />
         </div>
+
+        <aside className={styles.inputs}>
+          <details className={styles.inputsDisclosure} open>
+            <summary className={styles.inputsSummary}>עריכת הנחות</summary>
+            <DealInputsForm inputs={inputs} onChange={setInputs} />
+          </details>
+        </aside>
       </div>
 
       {dirty ? (
