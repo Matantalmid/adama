@@ -1,11 +1,12 @@
 "use client";
 
 import { NumberField } from "@/components/calculator/NumberField";
+import { Icon } from "@/components/ui/Icon";
 import { InfoTip } from "@/components/ui/InfoTip";
 import { Num } from "@/components/ui/Num";
 import type { CompCondition, CompsAnalysis, GarageKind, Property } from "@/data/types";
 import { averagePricePerSqft } from "@/lib/comps";
-import { pricePerSqft, sqft as sqftLabel, unitMix } from "@/lib/format";
+import { pricePerSqft, safeUrl, sqft as sqftLabel, unitMix } from "@/lib/format";
 import { compsGlossary } from "@/lib/glossary";
 import { conditionLabels, conditionOrder, garageLabels } from "@/lib/labels";
 
@@ -97,6 +98,27 @@ export function SubjectCard({
           onChange={(condition) => patch({ plannedCondition: condition as CompCondition })}
         />
 
+        <div className="field">
+          <div className={styles.labelRow}>
+            <label htmlFor="s-zillow">
+              קישור למודעה (<Num>Zillow</Num>)
+            </label>
+            <InfoTip id="s-zillow-tip" text={compsGlossary.zillowUrl} label="קישור למודעה" />
+          </div>
+          <div className={styles.linkRow}>
+            <input
+              id="s-zillow"
+              aria-describedby="s-zillow-tip"
+              className={`input ${styles.urlInput}`}
+              dir="auto"
+              placeholder="https://www.zillow.com/homedetails/..."
+              value={analysis.zillowUrl ?? ""}
+              onChange={(event) => patch({ zillowUrl: event.target.value || undefined })}
+            />
+            <SubjectListing url={analysis.zillowUrl} />
+          </div>
+        </div>
+
         <div className={styles.overrideRow}>
           <NumberField
             id="s-rate"
@@ -119,6 +141,24 @@ export function SubjectCard({
         </div>
       </div>
     </section>
+  );
+}
+
+/** The subject's own listing, once it is a usable address. */
+function SubjectListing({ url }: { url?: string }) {
+  const href = safeUrl(url);
+  if (!href) return null;
+  return (
+    <a
+      className={styles.listing}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={href}
+    >
+      <Icon name="external-link" size={11} />
+      <Num>Zillow</Num>
+    </a>
   );
 }
 

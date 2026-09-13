@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { ReceiptCaptureSheet } from "@/components/expenses/ReceiptCaptureSheet";
 import { Icon, type IconName } from "@/components/ui/Icon";
-import { activePropertyId } from "@/data/portfolio";
+import { useActivePropertyId } from "@/store/hooks";
 
 import styles from "./AppShell.module.css";
 
@@ -17,17 +17,20 @@ interface Tab {
   match: (pathname: string) => boolean;
 }
 
-const tabs: Tab[] = [
-  { href: "/", label: "דשבורד", icon: "home", match: (p) => p === "/" },
-  {
-    href: `/properties/${activePropertyId}/expenses`,
-    label: "הוצאות",
-    icon: "receipt",
-    match: (p) => p.endsWith("/expenses"),
-  },
-  { href: "/calculators", label: "מחשבון", icon: "calculator", match: (p) => p.startsWith("/calculators") },
-  { href: "/more", label: "עוד", icon: "more", match: (p) => p.startsWith("/more") },
-];
+/** The expenses tab needs a property, and a property can now be deleted. */
+function buildTabs(propertyId: string | undefined): Tab[] {
+  return [
+    { href: "/", label: "דשבורד", icon: "home", match: (p) => p === "/" },
+    {
+      href: propertyId ? `/properties/${propertyId}/expenses` : "/properties",
+      label: "הוצאות",
+      icon: "receipt",
+      match: (p) => p.endsWith("/expenses"),
+    },
+    { href: "/calculators", label: "מחשבון", icon: "calculator", match: (p) => p.startsWith("/calculators") },
+    { href: "/more", label: "עוד", icon: "more", match: (p) => p.startsWith("/more") },
+  ];
+}
 
 /**
  * Bottom navigation for phones (mockup 1c). The centre button is the receipt
@@ -37,8 +40,9 @@ const tabs: Tab[] = [
 export function MobileTabBar() {
   const pathname = usePathname();
   const [capturing, setCapturing] = useState(false);
+  const activeId = useActivePropertyId();
 
-  const [dashboard, expenses, ...rest] = tabs;
+  const [dashboard, expenses, ...rest] = buildTabs(activeId);
 
   return (
     <>
@@ -61,7 +65,9 @@ export function MobileTabBar() {
         ))}
       </nav>
 
-      {capturing ? <ReceiptCaptureSheet onClose={() => setCapturing(false)} /> : null}
+      {capturing && activeId ? (
+        <ReceiptCaptureSheet propertyId={activeId} onClose={() => setCapturing(false)} />
+      ) : null}
     </>
   );
 }

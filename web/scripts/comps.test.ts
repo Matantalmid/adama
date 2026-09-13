@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 
 import {
   averagePricePerSqft,
+  compMismatches,
   compPricePerSqft,
   compsArv,
   compsInAverage,
@@ -13,6 +14,7 @@ import {
   profitBuffer,
 } from "../src/lib/comps.ts";
 import { getProperty } from "../src/data/portfolio.ts";
+import { safeUrl } from "../src/lib/format.ts";
 import type { CompsAnalysis } from "../src/data/types.ts";
 
 /**
@@ -101,5 +103,74 @@ describe("the rounding the sheet does", () => {
   it("an override replaces the comps' rate", () => {
     const override: CompsAnalysis = { ...analysis, pricePerSqftOverride: 183 };
     assert.equal(compsArv(override, sqft), 329_400);
+  });
+});
+
+describe("a comp that does not match the property being priced", () => {
+  const { analysis } = workup("kendall-ave");
+  // 188 Kendall Ave is 4/2, planned for a turnkey finish.
+  const subject = { beds: 4, baths: 2, condition: "turnkey" as const };
+  const comp = (id: string) => {
+    const found = analysis.comps.find((c) => c.id === id);
+    assert.ok(found, `no comp ${id}`);
+    return found;
+  };
+
+  it("33 S Harrison is 4/2 and matches on rooms", () => {
+    const off = compMismatches(comp("k-harrison-33"), subject);
+    assert.equal(off.beds, false);
+    assert.equal(off.baths, false);
+  });
+
+  it("191 Irwin is 3/2 — beds differ, baths do not", () => {
+    const off = compMismatches(comp("k-irwin"), subject);
+    assert.equal(off.beds, true);
+    assert.equal(off.baths, false);
+  });
+
+  it("finish level is judged against what the subject is planned for", () => {
+    // 615 Cliff sold as a full rehab; Kendall is planned turnkey.
+    assert.equal(compMismatches(comp("k-cliff"), subject).condition, true);
+    // 419 Jefferson sold as a top rehab; against a top-rehab plan it matches.
+    assert.equal(
+      compMismatches(comp("k-jefferson"), { ...subject, condition: "top" }).condition,
+      false,
+    );
+  });
+
+  it("a figure nobody recorded is not a mismatch", () => {
+    const blank = { id: "x", status: "sold" as const, address: "", sqft: 0 };
+    const off = compMismatches(blank, subject);
+    assert.equal(off.beds, false);
+    assert.equal(off.baths, false);
+    assert.equal(off.condition, false);
+    // And neither is a comp measured against a subject with nothing recorded.
+    assert.equal(compMismatches(comp("k-irwin"), {}).beds, false);
+  });
+});
+
+describe("a link typed into a field, before it becomes an href", () => {
+  it("takes http and https", () => {
+    assert.equal(
+      safeUrl("https://www.zillow.com/homedetails/x"),
+      "https://www.zillow.com/homedetails/x",
+    );
+    assert.equal(safeUrl("http://example.com/"), "http://example.com/");
+  });
+
+  it("assumes https when no scheme is typed", () => {
+    assert.equal(safeUrl("zillow.com/homes/x"), "https://zillow.com/homes/x");
+  });
+
+  it("refuses anything the browser would run", () => {
+    assert.equal(safeUrl("javascript:alert(1)"), null);
+    assert.equal(safeUrl("  JavaScript:alert(1)  "), null);
+    assert.equal(safeUrl("data:text/html,<script>x</script>"), null);
+    assert.equal(safeUrl("file:///etc/passwd"), null);
+  });
+
+  it("treats empty as no link", () => {
+    assert.equal(safeUrl(undefined), null);
+    assert.equal(safeUrl("   "), null);
   });
 });

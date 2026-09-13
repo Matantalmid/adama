@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 
 import { Meter } from "@/components/ui/Meter";
+import { DeleteProperty } from "@/components/property/DeleteProperty";
+import { Icon } from "@/components/ui/Icon";
 import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
 import type { Property } from "@/data/types";
@@ -34,6 +38,7 @@ export function PropertiesTable({ properties }: { properties: Property[] }) {
             <th>ARV</th>
             <th style={{ width: 170 }}>תקציב שיפוץ</th>
             <th>רווח צפוי</th>
+            <th style={{ width: 48 }} />
           </tr>
         </thead>
         <tbody>
@@ -62,6 +67,23 @@ export function PropertiesTable({ properties }: { properties: Property[] }) {
               </td>
               <td>
                 <ProfitCell property={property} />
+              </td>
+              <td>
+
+                <DeleteProperty
+
+                  property={property}
+
+                  className={`btn btn-icon btn-secondary ${styles.rowDelete}`}
+
+                  label={`מחק ${property.address}`}
+
+                >
+
+                  <Icon name="trash" size={14} />
+
+                </DeleteProperty>
+
               </td>
             </tr>
           ))}

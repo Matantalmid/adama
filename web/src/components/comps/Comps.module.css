@@ -366,7 +366,7 @@
 }
 
 .scroll table {
-  min-width: 1000px;
+  min-width: 1120px;
 }
 
 .address {
@@ -379,6 +379,55 @@
 
 .rowOut td {
   color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-inline-end: 5px;
+  border-radius: 3px;
+  background: var(--color-accent-100);
+  border: 1px solid var(--color-accent-700);
+  vertical-align: baseline;
+}
+
+/* The address and, when there is one, the listing behind it. */
+.addressCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listing {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--color-divider);
+  color: var(--color-accent);
+  font-size: 11px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.listing:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.cellUrl {
+  direction: ltr;
+  text-align: left;
+  font-size: 12.5px;
+}
+
+.compUrl {
+  flex: 1;
+  min-width: 0;
+  border-color: var(--color-divider);
 }
 
 .include {
@@ -441,22 +490,38 @@
   background: color-mix(in srgb, var(--color-text) 3%, transparent);
 }
 
+/* A field grid, not a row of inline pairs: an inline <dd> is not a containing
+   block, so `.cellInput { width: 100% }` used to resolve against the <dl> and
+   every field demanded the whole row. Each field is now a block label over a
+   control the width of its own cell. */
 .detailGrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 20px;
-  padding: 6px 0 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 16px;
+  padding: 10px 0 12px;
+  margin: 0;
   font-size: 12px;
 }
 
-.detailGrid dt {
-  display: inline;
+.detailField > dt {
+  margin-bottom: 3px;
+  font-size: 11px;
   color: color-mix(in srgb, var(--color-text) 55%, transparent);
 }
 
-.detailGrid dd {
-  display: inline;
-  margin: 0 4px 0 0;
+.detailField > dd {
+  margin: 0;
+}
+
+.detailField .cellInput,
+.detailField .cellSelect {
+  width: 100%;
+  border-color: var(--color-divider);
+}
+
+/* A field that needs the whole row — a URL, not a number. */
+.detailWide {
+  grid-column: 1 / -1;
 }
 
 .detailPair {
@@ -533,7 +598,7 @@
 }
 
 .scroll .cellAddress {
-  min-width: 280px;
+  min-width: 190px;
 }
 
 .cellSelect {
@@ -549,6 +614,18 @@
 
 .cellSelect:hover {
   border-color: var(--color-divider);
+}
+
+/* A value that differs from the property being priced. Declared after the two
+   control classes, whose `background: transparent` would otherwise win.
+   Colour never carries it alone: every marked value also has a title and an
+   aria-label naming the subject's own figure, and the table has a legend. */
+.off,
+input.off,
+select.off {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+  font-weight: 600;
 }
 
 /* ── the subject card ── */
@@ -592,6 +669,20 @@
 
 .subLabel {
   font-size: 12px;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.urlInput {
+  direction: ltr;
+  text-align: left;
+  font-size: 12.5px;
+  min-width: 0;
+  flex: 1;
 }
 
 .overrideRow {

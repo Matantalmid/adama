@@ -11,6 +11,7 @@ import { Num } from "@/components/ui/Num";
 import { RichText } from "@/components/ui/RichText";
 import { Segmented } from "@/components/ui/Segmented";
 import { Tag } from "@/components/ui/Tag";
+import { MissingProperty } from "@/components/layout/MissingProperty";
 import { expenseLedger } from "@/data/portfolio";
 import type { Expense, Property, RehabCategory } from "@/data/types";
 import { categoryFillPct, categoryState, isOverBudget } from "@/lib/deal";
@@ -38,7 +39,7 @@ const views = [
 export function ExpensesScreen({ propertyId }: { propertyId: string }) {
   const property = useProperty(propertyId);
   const expenses = useExpenses(propertyId);
-  if (!property) return null;
+  if (!property) return <MissingProperty />;
   return <ExpensesBody property={property} expenses={expenses} />;
 }
 

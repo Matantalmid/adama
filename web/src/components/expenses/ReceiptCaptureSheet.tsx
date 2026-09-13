@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
-import { activePropertyId } from "@/data/portfolio";
+
 import { money } from "@/lib/format";
 import { stageLabels } from "@/lib/labels";
 import { actions } from "@/store";
-import { useProperty } from "@/store/hooks";
+import { useActivePropertyId, useProperty } from "@/store/hooks";
 
 import { CategoryChips } from "./CategoryChips";
 import styles from "./ReceiptCaptureSheet.module.css";
@@ -43,15 +43,17 @@ function today(): string {
 
 export function ReceiptCaptureSheet({
   onClose,
-  propertyId = activePropertyId,
+  propertyId,
   prefill = true,
 }: {
   onClose: () => void;
+  /** Omit to use whichever property the app is currently defaulting to. */
   propertyId?: string;
   /** True when a receipt was scanned; false for manual entry. */
   prefill?: boolean;
 }) {
-  const property = useProperty(propertyId);
+  const fallback = useActivePropertyId();
+  const property = useProperty(propertyId ?? fallback ?? "");
   const categories = property?.rehabCategories ?? [];
 
   const [amount, setAmount] = useState(prefill ? scanned.amount : 0);

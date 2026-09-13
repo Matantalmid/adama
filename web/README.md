@@ -185,6 +185,30 @@ one. The subject card owns the asking price and the rehab *estimate* for the
 same reason — the comps tab and the deal tab disagree on both, on purpose — and
 reads the house's own facts off the property so there is one copy of them.
 
+### A comp that does not match
+
+A comp only prices the subject if it is the same kind of house. Beds, baths and
+finish level are marked when they differ from the property being priced — those
+three, not size or lot or year, where no two houses ever agree and marking every
+difference would paint the table and say nothing. A figure nobody recorded is
+not a mismatch; you cannot differ from an unknown.
+
+A marked value is dark terracotta on the attention tint **and** carries a
+`title` and an `aria-label` naming the subject's own figure, and the table has a
+legend — colour never says it alone. Worth knowing: 188 Kendall Ave is planned
+for a turnkey finish and none of its ten comps sold at that level, so its whole
+מצב column is marked. That is the comps telling the truth about the ARV, not a
+bug; planning for משופץ מלא instead marks four of the ten.
+
+### The listing behind a comp
+
+Each comp, and the subject, keeps a link to the listing it was read off. It
+opens in a new tab with `rel="noopener noreferrer"` — the first external link in
+the app. The address is typed by a person and ends up in an `href`, so
+`safeUrl()` in `lib/format.ts` parses it and returns it only when the protocol
+is `http:` or `https:`; a `javascript:` address renders no link at all. A bare
+`zillow.com/...` is treated as https, the way an address bar would.
+
 ### The spread strip
 
 The average alone hides a wide spread: Kendall's comps run from $151 to $228 a
@@ -208,7 +232,7 @@ A categorised amount moves the category's spend and the property's rehab
 spend together, keeping the seed's invariant that the categories sum to the
 rehab spent. Actions: `addExpense`, `setExpenseCategory`,
 `raiseCategoryBudget`, `saveDealInputs`, `saveDefaults`, `saveComps`,
-`resetToSeed`. A version mismatch reseeds — bump `STORE_VERSION` when the shape
+`deleteProperty`, `resetToSeed`. A version mismatch reseeds — bump `STORE_VERSION` when the shape
 of `assumptions` or `compsAnalysis` changes, and note that doing so discards
 whatever the browser had saved.
 
@@ -217,6 +241,26 @@ what React renders during hydration and the stored state arrives a beat later,
 a draft seeded once with `useState` would freeze the seed and silently discard
 what was saved. `useDraft` in `store/hooks.ts` adopts the store's value when it
 changes, unless the user has already typed — use it for anything editable.
+
+## Deleting a property
+
+`/properties` and each property page can delete, behind a dialog that asks for a
+confirmation code. The property goes and its expenses go with it — nothing else
+prunes orphans, so they would sit in storage for ever otherwise.
+
+Two things to be clear about. **The code is a guard against a misclick, not a
+security control**: it is a constant in the client bundle and anyone who opens
+devtools can read it. And **the deletion is local** — the seed is still the
+source of truth, so "אפס הכל" or a `STORE_VERSION` bump brings the property back.
+
+Because a property can now vanish, three things had to stop assuming it will not.
+`useActivePropertyId` replaces the hard-coded `activePropertyId` wherever the app
+needs *some* property (the phone's expenses tab, the camera sheet); the two
+calculator pickers resolve to a property that still exists rather than rendering
+a blank page below the `<select>` that would have fixed it; and because the
+routes are generated from the seed rather than the store,
+`/properties/<deleted-id>` still resolves and now says **הנכס נמחק** instead of
+showing nothing inside full chrome.
 
 ## How it is organised
 
@@ -230,7 +274,7 @@ src/
     expenses/        ledger with filters, new-expense sheet, category chips
     calculator/      assumptions form, scenario matrix, ARV circles, defaults screen
     comps/           subject card, comps table, ARV summary, $/SqFt spread strip
-    ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText, InfoTip
+    ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText, InfoTip, ConfirmDialog
   data/              types + seed data from the mockups
   lib/               calc.ts + comps.ts (the two spreadsheets), glossary.ts, deal.ts, format, labels
   store/             localStorage store and hooks

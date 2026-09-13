@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 
+import { activePropertyId } from "@/data/portfolio";
 import type { Expense, Property } from "@/data/types";
 import type { DealAssumptions } from "@/lib/calc";
 
@@ -55,4 +56,30 @@ export function useDraft<T>(source: T): [T, (next: T) => void] {
   }
 
   return [draft, setDraft];
+}
+
+/**
+ * The property the app falls back to when no particular one is named — the
+ * phone's expenses tab, the camera sheet, the two calculator pickers.
+ *
+ * `activePropertyId` is a constant in the seed, and the seed's properties can
+ * now be deleted, so it cannot be trusted on its own: this returns it while it
+ * exists and the first property still in the store otherwise.
+ */
+export function useActivePropertyId(): string | undefined {
+  const { properties } = useStoreState();
+  return properties.some((p) => p.id === activePropertyId)
+    ? activePropertyId
+    : properties[0]?.id;
+}
+
+/**
+ * Resolve an id that may no longer be there. Used by the screens that let you
+ * pick a property: if the picked one has gone, fall back rather than render a
+ * blank page with no way out.
+ */
+export function useResolvedPropertyId(picked: string): string | undefined {
+  const { properties } = useStoreState();
+  if (properties.some((p) => p.id === picked)) return picked;
+  return properties.some((p) => p.id === activePropertyId) ? activePropertyId : properties[0]?.id;
 }

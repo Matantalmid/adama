@@ -89,3 +89,23 @@ export function unitMix({
   if (beds === undefined || baths === undefined) return "";
   return `${beds}/${baths}`;
 }
+
+/**
+ * A URL typed by a person, safe to put in an `href` — or null.
+ *
+ * Only `http:` and `https:` come back. Anything else is refused, `javascript:`
+ * above all: these addresses are typed into a field and rendered as links, and
+ * a link is a thing the browser will run. A bare "zillow.com/homes/x" is
+ * treated as https, the way an address bar would.
+ */
+export function safeUrl(raw: string | undefined): string | null {
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
+  const candidate = /^[a-z][a-z0-9+.-]*:/i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const url = new URL(candidate);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}

@@ -162,6 +162,22 @@ export const actions = {
     }));
   },
 
+  /**
+   * Remove a property and the expenses filed against it. Nothing else prunes
+   * orphans — `useExpenses` only filters by id — so leaving them behind would
+   * keep them in storage for ever, invisible.
+   *
+   * Local only: the seed is still the source of truth, so `resetToSeed` or a
+   * `STORE_VERSION` bump brings the property back.
+   */
+  deleteProperty(propertyId: string): void {
+    setState((s) => ({
+      ...s,
+      properties: s.properties.filter((p) => p.id !== propertyId),
+      expenses: s.expenses.filter((e) => e.propertyId !== propertyId),
+    }));
+  },
+
   resetToSeed(): void {
     clearStored();
     setState(() => seedState());

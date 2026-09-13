@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
+import { DeleteProperty } from "@/components/property/DeleteProperty";
+import { Icon } from "@/components/ui/Icon";
 import { Meter } from "@/components/ui/Meter";
 import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
@@ -14,18 +18,32 @@ import styles from "./MobilePropertyCard.module.css";
  * A property as it appears in the phone list (mockup 1c) — the address, where
  * it stands, and the one number that matters at this stage: rehab progress
  * while renovating, cash flow once rented, the appointment while refinancing.
+ *
+ * The whole card was one <Link>, which left nowhere to put a second control —
+ * a button inside an anchor is not valid and does not behave. The link now
+ * stretches over the card instead, so the card is still tappable everywhere
+ * and the delete button sits above it.
  */
 export function MobilePropertyCard({ property }: { property: Property }) {
   const stage = stageLabels[property.stage];
   const cashFlow = monthlyCashFlow(property);
 
   return (
-    <Link href={`/properties/${property.id}`} className={`card ${styles.card}`}>
+    <article className={`card ${styles.card}`}>
       <div className={styles.head}>
-        <strong>
-          <Num>{property.address}</Num>
-        </strong>
+        <Link href={`/properties/${property.id}`} className={styles.stretch}>
+          <strong>
+            <Num>{property.address}</Num>
+          </strong>
+        </Link>
         <Tag tone={stage.tone}>{stage.label}</Tag>
+        <DeleteProperty
+          property={property}
+          className={`btn btn-icon btn-secondary ${styles.cardDelete}`}
+          label={`מחק ${property.address}`}
+        >
+          <Icon name="trash" size={14} />
+        </DeleteProperty>
       </div>
 
       <div className={`text-muted ${styles.meta}`}>
@@ -84,6 +102,6 @@ export function MobilePropertyCard({ property }: { property: Property }) {
           )}
         </div>
       ) : null}
-    </Link>
+    </article>
   );
 }

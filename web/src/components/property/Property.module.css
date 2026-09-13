@@ -275,3 +275,28 @@
     gap: 6px;
   }
 }
+
+/* The breadcrumb and the page's own actions share a line. The actions are
+   desktop-only — on the phone they live in .mobileBar. */
+.crumbRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.headerActions .btn {
+  font-size: 13px;
+}
+
+@media (max-width: 899px) {
+  .headerActions {
+    display: none;
+  }
+}

@@ -100,3 +100,19 @@ a:hover { color: var(--color-accent-700); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* A destructive action. The design system has primary, secondary and ghost;
+   nothing in the handoff deletes anything, so this is the app's own. */
+.btn-danger {
+  border-color: color-mix(in srgb, var(--color-accent-700) 45%, transparent);
+  color: var(--color-accent-700);
+}
+
+.btn-danger:hover:not(:disabled) {
+  border-color: var(--color-accent-700);
+  background: color-mix(in srgb, var(--color-accent-700) 12%, transparent);
+}
+
+.btn-danger:active:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent-700) 20%, transparent);
+}

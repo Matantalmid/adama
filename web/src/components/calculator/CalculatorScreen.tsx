@@ -6,12 +6,20 @@ import { useMemo, useState } from "react";
 import { PropertyTabs } from "@/components/property/PropertyTabs";
 import { Num } from "@/components/ui/Num";
 import { Tag } from "@/components/ui/Tag";
+import { MissingProperty } from "@/components/layout/MissingProperty";
 import { activePropertyId, expenseLedger } from "@/data/portfolio";
 import type { Property } from "@/data/types";
 import { compareScenarios, inputsFromProperty, shapeForProperty, type DealInputs } from "@/lib/calc";
 import { stageLabels, strategyLabels } from "@/lib/labels";
 import { actions } from "@/store";
-import { useDefaults, useDraft, useExpenses, useProperties, useProperty } from "@/store/hooks";
+import {
+  useDefaults,
+  useDraft,
+  useExpenses,
+  useProperties,
+  useProperty,
+  useResolvedPropertyId,
+} from "@/store/hooks";
 
 import { ArvCircles } from "./ArvCircles";
 import { DealInputsForm } from "./DealInputsForm";
@@ -28,11 +36,15 @@ import styles from "./Calculator.module.css";
 export function CalculatorScreen({ propertyId }: { propertyId?: string }) {
   const properties = useProperties();
   const [picked, setPicked] = useState(activePropertyId);
-  const id = propertyId ?? picked;
+  // The picked property can be deleted from another screen, and the <select>
+  // that would let you choose another lives below this guard — so resolve to
+  // one that still exists rather than rendering an empty page.
+  const resolved = useResolvedPropertyId(picked);
+  const id = propertyId ?? resolved ?? "";
   const property = useProperty(id);
   const expenses = useExpenses(id);
 
-  if (!property) return null;
+  if (!property) return <MissingProperty empty={!propertyId} />;
 
   const expenseCount =
     property.id === expenseLedger.propertyId ? expenseLedger.totalCount : expenses.length;

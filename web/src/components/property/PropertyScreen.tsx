@@ -8,6 +8,7 @@ import { Num } from "@/components/ui/Num";
 import { PhotoFrame } from "@/components/ui/PhotoFrame";
 import { RichText } from "@/components/ui/RichText";
 import { Tag } from "@/components/ui/Tag";
+import { MissingProperty } from "@/components/layout/MissingProperty";
 import type { Property } from "@/data/types";
 import { expenseLedger } from "@/data/portfolio";
 import { compareScenarios, inputsFromProperty } from "@/lib/calc";
@@ -24,6 +25,7 @@ import { financingLabels, stageLabels, strategyLabels } from "@/lib/labels";
 import { useExpenses, useProperty } from "@/store/hooks";
 
 import { BudgetVsActual } from "./BudgetVsActual";
+import { DeleteProperty } from "./DeleteProperty";
 import { PropertyTabs } from "./PropertyTabs";
 import { Timeline } from "./Timeline";
 import styles from "./Property.module.css";
@@ -36,7 +38,7 @@ import styles from "./Property.module.css";
 export function PropertyScreen({ propertyId }: { propertyId: string }) {
   const property = useProperty(propertyId);
   const expenses = useExpenses(propertyId);
-  if (!property) return null;
+  if (!property) return <MissingProperty />;
   return <PropertyBody property={property} expenseCount={expenses.length} />;
 }
 
@@ -60,18 +62,32 @@ function PropertyBody({ property, expenseCount: seededCount }: { property: Prope
           <Icon name="chevron-right" size={16} />
         </Link>
         <span className={styles.mobileBarTitle}>נכס</span>
-        <button type="button" className="btn btn-icon btn-secondary" aria-label="עוד פעולות">
-          <Icon name="more" size={16} />
-        </button>
+        <DeleteProperty
+          property={property}
+          redirectTo="/properties"
+          className="btn btn-icon btn-secondary"
+          label="מחק נכס"
+        >
+          <Icon name="trash" size={16} />
+        </DeleteProperty>
       </div>
 
-      <nav className={`text-muted ${styles.breadcrumb}`} aria-label="מיקום">
-        <Link href="/properties">נכסים</Link>
-        <span className={styles.separator} aria-hidden="true">
-          ›
-        </span>
-        <Num>{property.address}</Num>
-      </nav>
+      <div className={styles.crumbRow}>
+        <nav className={`text-muted ${styles.breadcrumb}`} aria-label="מיקום">
+          <Link href="/properties">נכסים</Link>
+          <span className={styles.separator} aria-hidden="true">
+            ›
+          </span>
+          <Num>{property.address}</Num>
+        </nav>
+
+        <div className={styles.headerActions}>
+          <DeleteProperty property={property} redirectTo="/properties">
+            <Icon name="trash" size={14} />
+            מחק נכס
+          </DeleteProperty>
+        </div>
+      </div>
 
       {/* ── hero ── */}
       <div className={styles.hero}>

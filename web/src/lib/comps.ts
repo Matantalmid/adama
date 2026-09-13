@@ -1,6 +1,6 @@
 import { RULE_70 } from "./calc.ts";
 
-import type { Comparable, CompsAnalysis } from "@/data/types";
+import type { Comparable, CompCondition, CompsAnalysis } from "@/data/types";
 
 /**
  * The investor's "Comps & ARV Calculator" sheet, as functions.
@@ -99,6 +99,37 @@ export function profitBuffer(a: CompsAnalysis, sqft: number): number {
 /** The asking price against the maximum offer: positive means over. */
 export function overMao(a: CompsAnalysis, sqft: number): number {
   return a.askingPrice - compsMao(a, sqft);
+}
+
+/** What a comp is being compared against — the property being priced. */
+export interface SubjectFacts {
+  beds?: number;
+  baths?: number;
+  /** The finish level the subject is planned for, not its state today. */
+  condition?: CompCondition;
+}
+
+/**
+ * Where this comp differs from the property being priced.
+ *
+ * Only the three the investor reads first. Size, lot and year are left alone:
+ * no two houses share a square footage, so flagging every difference there
+ * would paint the whole table and say nothing.
+ *
+ * A field missing on either side is **not** a mismatch — you cannot differ
+ * from something nobody recorded.
+ */
+export function compMismatches(
+  comp: Comparable,
+  subject: SubjectFacts,
+): { beds: boolean; baths: boolean; condition: boolean } {
+  const differs = <T,>(a: T | undefined, b: T | undefined) =>
+    a !== undefined && b !== undefined && a !== b;
+  return {
+    beds: differs(comp.beds, subject.beds),
+    baths: differs(comp.baths, subject.baths),
+    condition: differs(comp.condition, subject.condition),
+  };
 }
 
 /** An empty comp row, for the table's "+ קומפ". */

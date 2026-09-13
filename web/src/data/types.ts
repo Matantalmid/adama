@@ -70,6 +70,8 @@ export interface Comparable {
   /** Days on market. */
   domDays?: number;
   condition?: CompCondition;
+  /** The listing this comp was read off — Zillow, or any http(s) address. */
+  zillowUrl?: string;
   /**
    * Kept out of the $/SqFt average — a comp too far from the subject to price
    * it. It still counts toward the median sale price, the way the sheet does.
@@ -97,6 +99,8 @@ export interface CompsAnalysis {
   plannedCondition?: CompCondition;
   /** The investor's own $/SqFt, when they disagree with the comps' average. */
   pricePerSqftOverride?: number;
+  /** The subject's own listing — Zillow, or any http(s) address. */
+  zillowUrl?: string;
   comps: Comparable[];
 }
 

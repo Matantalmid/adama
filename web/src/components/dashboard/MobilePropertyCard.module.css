@@ -1,8 +1,31 @@
 .card {
+  position: relative;
   padding: 14px 16px;
   gap: 8px;
   color: inherit;
   text-decoration: none;
+}
+
+/* The link covers the card, so a tap anywhere still opens the property, and
+   the delete button can sit above it as a sibling. */
+.stretch {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stretch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.cardDelete {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 30px;
+  height: 30px;
 }
 
 .head {
@@ -14,6 +37,11 @@
 
 .head strong {
   font-weight: 600;
+}
+
+.head > :first-child {
+  flex: 1;
+  min-width: 0;
 }
 
 .meta {

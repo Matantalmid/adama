@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Icon } from "@/components/ui/Icon";
 import { InfoTip } from "@/components/ui/InfoTip";
@@ -8,13 +8,15 @@ import { Num } from "@/components/ui/Num";
 import type { Comparable, CompCondition, CompsAnalysis, CompStatus } from "@/data/types";
 import {
   averagePricePerSqft,
+  compMismatches,
   compPricePerSqft,
   compsInAverage,
   emptyComp,
   medianSalePrice,
   pricedComps,
+  type SubjectFacts,
 } from "@/lib/comps";
-import { money, pricePerSqft, shortDate } from "@/lib/format";
+import { money, pricePerSqft, safeUrl, shortDate } from "@/lib/format";
 import {
   compStatusLabels,
   conditionLabels,
@@ -39,9 +41,12 @@ const statuses: CompStatus[] = ["sold", "pending", "active"];
 
 export function CompsTable({
   analysis,
+  subject,
   onChange,
 }: {
   analysis: CompsAnalysis;
+  /** The property being priced — what a comp is coloured against. */
+  subject: SubjectFacts;
   onChange: (next: CompsAnalysis) => void;
 }) {
   const [open, setOpen] = useState<string | null>(null);
@@ -78,8 +83,8 @@ export function CompsTable({
                 <th style={{ width: 96, textAlign: "left" }}>
                   <Num>$/SqFt</Num>
                 </th>
-                <th style={{ width: 84 }}>תאריך</th>
-                <th style={{ width: 140 }}>מצב</th>
+                <th style={{ width: 80 }}>תאריך</th>
+                <th style={{ width: 124 }}>מצב</th>
                 <th style={{ width: 70 }}>
                   <span className={styles.medianLabel}>
                     בממוצע
@@ -91,7 +96,7 @@ export function CompsTable({
                     />
                   </span>
                 </th>
-                <th style={{ width: 96 }} />
+                <th style={{ width: 88 }} />
               </tr>
             </thead>
             <tbody>
@@ -106,19 +111,23 @@ export function CompsTable({
                 const rate = compPricePerSqft(comp);
                 const out = comp.excluded === true;
                 const expanded = open === comp.id;
+                const off = compMismatches(comp, subject);
                 return [
                   <tr key={comp.id} className={out ? styles.rowOut : undefined}>
                     <td>
-                      <input
-                        className={`${styles.cellInput} ${styles.cellAddress}`}
-                        aria-label="כתובת הקומפ"
-                        placeholder="Street, City, ST"
-                        value={comp.address}
-                        onChange={(e) => patch(comp.id, { address: e.target.value })}
-                      />
+                      <div className={styles.addressCell}>
+                        <input
+                          className={`${styles.cellInput} ${styles.cellAddress}`}
+                          aria-label="כתובת הקומפ"
+                          placeholder="Street, City, ST"
+                          value={comp.address}
+                          onChange={(e) => patch(comp.id, { address: e.target.value })}
+                        />
+                        <ListingLink url={comp.zillowUrl} />
+                      </div>
                     </td>
                     <td>
-                      <UnitCell comp={comp} onPatch={patch} />
+                      <UnitCell comp={comp} onPatch={patch} off={off} subject={subject} />
                     </td>
                     <td>
                       <NumCell
@@ -151,7 +160,12 @@ export function CompsTable({
                       />
                     </td>
                     <td>
-                      <ConditionCell comp={comp} onPatch={patch} />
+                      <ConditionCell
+                        comp={comp}
+                        onPatch={patch}
+                        off={off.condition}
+                        subject={subject.condition}
+                      />
                     </td>
                     <td className={styles.include}>
                       <input
@@ -217,14 +231,23 @@ export function CompsTable({
             קומפ
           </button>
           <span className="text-muted" style={{ fontSize: 12 }}>
-            &quot;עוד&quot; פותח מגרש, חניה, גראז&apos;, שנה, <Num>DOM</Num> ומרחק.
+            <span className={styles.legendSwatch} aria-hidden="true" />
+            ערך צבוע שונה מהנכס שנבדק · &quot;עוד&quot; פותח מגרש, חניה, גראז&apos;, שנה,{" "}
+            <Num>DOM</Num>, מרחק וקישור.
           </span>
         </div>
       </section>
 
       <div className={styles.mobileList}>
         {comps.map((comp) => (
-          <MobileComp key={comp.id} comp={comp} onPatch={patch} onRemove={remove} />
+          <MobileComp
+            key={comp.id}
+            comp={comp}
+            onPatch={patch}
+            onRemove={remove}
+            off={compMismatches(comp, subject)}
+            subject={subject}
+          />
         ))}
         <button type="button" className={`btn btn-secondary ${styles.addComp}`} onClick={add}>
           <Icon name="plus" size={13} />
@@ -279,13 +302,24 @@ function NumCell({
   );
 }
 
-function UnitCell({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) {
+function UnitCell({
+  comp,
+  onPatch,
+  off,
+  subject,
+}: {
+  comp: Comparable;
+  onPatch: Patch;
+  off: { beds: boolean; baths: boolean };
+  subject: SubjectFacts;
+}) {
   return (
     <span className={styles.unitCell}>
       <input
-        className={`${styles.cellInput} ${styles.cellNum}`}
+        className={`${styles.cellInput} ${styles.cellNum} ${off.beds ? styles.off : ""}`}
         style={{ width: 30 }}
-        aria-label="חדרי שינה"
+        aria-label={off.beds ? `חדרי שינה — לנכס ${subject.beds}` : "חדרי שינה"}
+        title={off.beds ? `לנכס ${subject.beds} חדרי שינה` : undefined}
         inputMode="numeric"
         placeholder="—"
         value={comp.beds ?? ""}
@@ -293,9 +327,10 @@ function UnitCell({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) {
       />
       <span className="text-muted">/</span>
       <input
-        className={`${styles.cellInput} ${styles.cellNum}`}
+        className={`${styles.cellInput} ${styles.cellNum} ${off.baths ? styles.off : ""}`}
         style={{ width: 30 }}
-        aria-label="חדרי רחצה"
+        aria-label={off.baths ? `חדרי רחצה — לנכס ${subject.baths}` : "חדרי רחצה"}
+        title={off.baths ? `לנכס ${subject.baths} חדרי רחצה` : undefined}
         inputMode="numeric"
         placeholder="—"
         value={comp.baths ?? ""}
@@ -305,11 +340,24 @@ function UnitCell({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) {
   );
 }
 
-function ConditionCell({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) {
+function ConditionCell({
+  comp,
+  onPatch,
+  off,
+  subject,
+}: {
+  comp: Comparable;
+  onPatch: Patch;
+  off: boolean;
+  subject?: CompCondition;
+}) {
   return (
     <select
-      className={styles.cellSelect}
-      aria-label="רמת שיפוץ"
+      className={`${styles.cellSelect} ${off ? styles.off : ""}`}
+      aria-label={
+        off && subject ? `רמת שיפוץ — הנכס מתוכנן ל${conditionLabels[subject]}` : "רמת שיפוץ"
+      }
+      title={off && subject ? `הנכס מתוכנן ל${conditionLabels[subject]}` : undefined}
       value={comp.condition ?? ""}
       onChange={(e) =>
         onPatch(comp.id, { condition: (e.target.value || undefined) as CompCondition | undefined })
@@ -325,102 +373,123 @@ function ConditionCell({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) 
   );
 }
 
+/** The listing behind a comp, when one has been recorded. */
+function ListingLink({ url }: { url?: string }) {
+  const href = safeUrl(url);
+  if (!href) return null;
+  return (
+    <a
+      className={styles.listing}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={href}
+    >
+      <Icon name="external-link" size={11} />
+      <Num>Zillow</Num>
+    </a>
+  );
+}
+
 /** The seven fields that do not decide comparability at a glance. */
 function Detail({ comp, onPatch }: { comp: Comparable; onPatch: Patch }) {
   return (
     <dl className={styles.detailGrid}>
-      <span className={styles.detailPair}>
-        <dt>מגרש</dt>
-        <dd>
-          <NumCell
-            label="שטח מגרש"
-            value={comp.lotSqft}
-            onChange={(v) => onPatch(comp.id, { lotSqft: v })}
-          />
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>חניה</dt>
-        <dd>
-          <NumCell
-            label="מקומות חניה"
-            value={comp.parking}
-            onChange={(v) => onPatch(comp.id, { parking: v })}
-          />
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>גראז&apos;</dt>
-        <dd>
-          <select
-            className={styles.cellSelect}
-            aria-label="סוג גראז'"
-            value={comp.garage ?? ""}
-            onChange={(e) =>
-              onPatch(comp.id, {
-                garage: (e.target.value || undefined) as Comparable["garage"],
-              })
-            }
-          >
-            <option value="">—</option>
-            {(Object.keys(garageLabels) as (keyof typeof garageLabels)[]).map((key) => (
-              <option key={key} value={key}>
-                {garageLabels[key]}
-              </option>
-            ))}
-          </select>
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>שנת בנייה</dt>
-        <dd>
-          <NumCell
-            label="שנת בנייה"
-            value={comp.yearBuilt}
-            onChange={(v) => onPatch(comp.id, { yearBuilt: v })}
-          />
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>
-          <Num>DOM</Num>
-        </dt>
-        <dd>
-          <NumCell
-            label="ימים בשוק"
-            value={comp.domDays}
-            onChange={(v) => onPatch(comp.id, { domDays: v })}
-          />
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>מרחק</dt>
-        <dd>
-          <NumCell
-            label="מרחק במיילים"
-            value={comp.distanceMi}
-            onChange={(v) => onPatch(comp.id, { distanceMi: v })}
-          />
-        </dd>
-      </span>
-      <span className={styles.detailPair}>
-        <dt>סטטוס</dt>
-        <dd>
-          <select
-            className={styles.cellSelect}
-            aria-label="סטטוס העסקה"
-            value={comp.status}
-            onChange={(e) => onPatch(comp.id, { status: e.target.value as CompStatus })}
-          >
-            {statuses.map((key) => (
-              <option key={key} value={key}>
-                {compStatusLabels[key]}
-              </option>
-            ))}
-          </select>
-        </dd>
-      </span>
+      <Field label="מגרש">
+        <NumCell
+          label="שטח מגרש"
+          value={comp.lotSqft}
+          onChange={(v) => onPatch(comp.id, { lotSqft: v })}
+        />
+      </Field>
+      <Field label="חניה">
+        <NumCell
+          label="מקומות חניה"
+          value={comp.parking}
+          onChange={(v) => onPatch(comp.id, { parking: v })}
+        />
+      </Field>
+      <Field label="גראז'">
+        <select
+          className={styles.cellSelect}
+          aria-label="סוג גראז'"
+          value={comp.garage ?? ""}
+          onChange={(e) =>
+            onPatch(comp.id, { garage: (e.target.value || undefined) as Comparable["garage"] })
+          }
+        >
+          <option value="">—</option>
+          {(Object.keys(garageLabels) as (keyof typeof garageLabels)[]).map((key) => (
+            <option key={key} value={key}>
+              {garageLabels[key]}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field label="שנת בנייה">
+        <NumCell
+          label="שנת בנייה"
+          value={comp.yearBuilt}
+          onChange={(v) => onPatch(comp.id, { yearBuilt: v })}
+        />
+      </Field>
+      <Field label={<Num>DOM</Num>}>
+        <NumCell
+          label="ימים בשוק"
+          value={comp.domDays}
+          onChange={(v) => onPatch(comp.id, { domDays: v })}
+        />
+      </Field>
+      <Field label="מרחק במיילים">
+        <NumCell
+          label="מרחק במיילים"
+          value={comp.distanceMi}
+          onChange={(v) => onPatch(comp.id, { distanceMi: v })}
+        />
+      </Field>
+      <Field label="סטטוס">
+        <select
+          className={styles.cellSelect}
+          aria-label="סטטוס העסקה"
+          value={comp.status}
+          onChange={(e) => onPatch(comp.id, { status: e.target.value as CompStatus })}
+        >
+          {statuses.map((key) => (
+            <option key={key} value={key}>
+              {compStatusLabels[key]}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field label={<>קישור למודעה (<Num>Zillow</Num>)</>} wide>
+        <input
+          className={`${styles.cellInput} ${styles.cellUrl}`}
+          aria-label="קישור למודעה"
+          dir="auto"
+          placeholder="https://www.zillow.com/homedetails/..."
+          value={comp.zillowUrl ?? ""}
+          onChange={(e) => onPatch(comp.id, { zillowUrl: e.target.value || undefined })}
+        />
+      </Field>
     </dl>
+  );
+}
+
+/** One labelled field of the detail row. A <div> — <span> is not allowed here. */
+function Field({
+  label,
+  wide,
+  children,
+}: {
+  label: ReactNode;
+  wide?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className={`${styles.detailField} ${wide ? styles.detailWide : ""}`}>
+      <dt>{label}</dt>
+      <dd>{children}</dd>
+    </div>
   );
 }
 
@@ -429,10 +498,14 @@ function MobileComp({
   comp,
   onPatch,
   onRemove,
+  off,
+  subject,
 }: {
   comp: Comparable;
   onPatch: Patch;
   onRemove: (id: string) => void;
+  off: { beds: boolean; baths: boolean; condition: boolean };
+  subject: SubjectFacts;
 }) {
   const rate = compPricePerSqft(comp);
   const out = comp.excluded === true;
@@ -461,15 +534,34 @@ function MobileComp({
           <Num>SqFt</Num>{" "}
           <NumCell label="שטח מבנה" value={comp.sqft} onChange={(v) => onPatch(comp.id, { sqft: v })} />
         </span>
-        <span className={styles.detailPair}>
-          {comp.beds ?? "—"}/{comp.baths ?? "—"} חדרים
+        <span
+          className={`${styles.detailPair} ${off.beds || off.baths ? styles.off : ""}`}
+          title={
+            off.beds || off.baths
+              ? `לנכס ${subject.beds ?? "—"}/${subject.baths ?? "—"} חדרים`
+              : undefined
+          }
+        >
+          <Num>{`${comp.beds ?? "—"}/${comp.baths ?? "—"}`}</Num> חדרים
         </span>
         {comp.saleDate ? (
           <span className={styles.detailPair}>
             נמכר <Num>{shortDate(comp.saleDate)}</Num>
           </span>
         ) : null}
-        {comp.condition ? <span>{conditionLabels[comp.condition]}</span> : null}
+        {comp.condition ? (
+          <span
+            className={off.condition ? styles.off : undefined}
+            title={
+              off.condition && subject.condition
+                ? `הנכס מתוכנן ל${conditionLabels[subject.condition]}`
+                : undefined
+            }
+          >
+            {conditionLabels[comp.condition]}
+          </span>
+        ) : null}
+        <ListingLink url={comp.zillowUrl} />
       </div>
       <div className={styles.compFoot}>
         <label className={styles.compToggle}>
@@ -480,6 +572,14 @@ function MobileComp({
           />
           כלול בממוצע
         </label>
+        <input
+          className={`${styles.cellInput} ${styles.cellUrl} ${styles.compUrl}`}
+          aria-label="קישור למודעה"
+          dir="auto"
+          placeholder="קישור למודעה"
+          value={comp.zillowUrl ?? ""}
+          onChange={(e) => onPatch(comp.id, { zillowUrl: e.target.value || undefined })}
+        />
         <button
           type="button"
           className={styles.remove}

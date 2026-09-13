@@ -48,3 +48,16 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+
+.rowDelete {
+  width: 30px;
+  height: 30px;
+  border-color: transparent;
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+tr:hover .rowDelete,
+.rowDelete:focus-visible {
+  border-color: var(--color-divider);
+  color: var(--color-accent-700);
+}
