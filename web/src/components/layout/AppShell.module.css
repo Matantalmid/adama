@@ -1,0 +1,117 @@
+/* ── breakpoint ──
+   The desktop artboards are 1180px wide. Below 900px the top bar gives way to
+   the bottom tab bar and every screen switches to its stacked mobile layout. */
+
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--color-divider);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbarInner {
+  max-width: calc(1180px + 64px);
+  margin: 0 auto;
+  padding: 14px 32px;
+}
+
+.brandMark {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  flex: none;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.action {
+  margin-inline-start: var(--space-4);
+}
+
+/* The artboards are 1180px of content inside their own 32px gutters, so the
+   page is that wide plus the gutters — otherwise every screen renders 64px
+   narrower than it was designed and the widest tables start to clip. */
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: calc(1180px + 64px);
+  margin: 0 auto;
+  padding: 8px 32px 36px;
+}
+
+/* The tab bar floats over the last rows of content, so pages need room under
+   them — matching the mockup, where the bar sits on the phone's safe area. */
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .topbar {
+    display: none;
+  }
+
+  .main {
+    padding: 0 16px 12px;
+  }
+
+  .shell {
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .tabbar {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 10px 12px calc(14px + env(safe-area-inset-bottom, 0px));
+    background: var(--color-surface);
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -2px 18px color-mix(in srgb, #2e2b25 10%, transparent);
+  }
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 56px;
+  font-size: 10.5px;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.tabActive {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Centre capture button — lifted out of the bar, as in mockup 1c. */
+.fab {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-top: -30px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}

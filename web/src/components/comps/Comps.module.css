@@ -1,0 +1,831 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.breadcrumb {
+  font-size: 12.5px;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.separator {
+  margin: 0 6px;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 420px;
+  padding-top: 8px;
+}
+
+.select {
+  appearance: auto;
+  font-family: var(--font-body);
+}
+
+/* ── header ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 40px;
+  direction: ltr;
+  text-align: right;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ── layout ──
+   Results first, as the calculator does: in RTL that is the right-hand,
+   first-read column. The comps table spans both columns underneath. */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.subject {
+  min-width: 0;
+}
+
+.tableWrap {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* ── the ARV summary ── */
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.summaryNote {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  text-align: center;
+}
+
+.circleArv {
+  width: 200px;
+  height: 200px;
+  background: var(--color-accent-2-300);
+  color: var(--color-accent-2-900);
+}
+
+.circleSmall {
+  width: 84px;
+  height: 84px;
+}
+
+.circleMao {
+  background: var(--color-accent-200);
+  color: var(--color-accent-900);
+}
+
+.circleBuffer {
+  background: var(--color-surface);
+}
+
+.circleKicker {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.circleKickerSm {
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 6px;
+  line-height: 1.2;
+}
+
+.circleValue {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  line-height: 1;
+}
+
+.circleValueSm {
+  font-family: var(--font-heading);
+  font-size: 15px;
+}
+
+.circleMeta {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.summaryStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.summaryText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.medians {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 13px;
+}
+
+.medianLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── the spread strip ──
+   Emphasis, not a categorical palette: the comps are de-emphasis gray and the
+   rate that drives the ARV is the accent. Plain HTML rather than SVG so the
+   labels keep their size at every width instead of scaling with a viewBox. */
+.strip {
+  margin: 0;
+  padding: 16px 20px 14px;
+}
+
+.stripHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+
+.stripTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+
+/* Digits run left-to-right whatever the page direction, so low sits left. */
+.track {
+  position: relative;
+  direction: ltr;
+  height: 62px;
+  margin: 6px 10px 0;
+}
+
+.axis {
+  position: absolute;
+  inset-inline: 0;
+  top: 38px;
+  height: 1px;
+  background: var(--color-divider);
+}
+
+.dot {
+  position: absolute;
+  top: 32px;
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #474238;
+  /* The surface ring, not a border: it separates overlapping comps without
+     adding data-weight ink. */
+  box-shadow: 0 0 0 2px var(--color-surface);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+/* Out of the average: shape carries it, never colour alone. */
+.dotOut {
+  background: transparent;
+  border: 2px solid #474238;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-surface),
+    0 0 0 4px color-mix(in srgb, #474238 45%, transparent);
+  outline: none;
+}
+
+/* The rate the ARV is taken at. */
+.avgMark {
+  position: absolute;
+  top: 16px;
+  width: 2px;
+  height: 30px;
+  background: var(--color-accent-600);
+  transform: translateX(-50%);
+}
+
+.avgLabel {
+  position: absolute;
+  top: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-accent-700);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.avgLabelStart {
+  transform: none;
+}
+
+.avgLabelEnd {
+  transform: translateX(-100%);
+}
+
+.medianMark {
+  position: absolute;
+  top: 38px;
+  width: 1px;
+  height: 9px;
+  background: color-mix(in srgb, var(--color-text) 40%, transparent);
+  transform: translateX(-50%);
+}
+
+.medianLabelMark {
+  position: absolute;
+  top: 48px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.end {
+  position: absolute;
+  top: 48px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  white-space: nowrap;
+}
+
+/* Anchored to the extreme dots but growing inward, so neither label can run
+   past the end of the track at any width. */
+.endMin {
+  transform: none;
+}
+
+.endMax {
+  transform: translateX(-100%);
+}
+
+/* One line under the strip that names whatever the pointer is on — a readout
+   instead of a floating tooltip, so nothing can overflow the card's edge. */
+.readout {
+  margin: 10px 0 0;
+  min-height: 32px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.readoutName {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.stripEmpty {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+/* ── the comps table ── */
+.tableCard {
+  padding: 8px 20px 12px;
+  gap: 0;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.scroll table {
+  min-width: 1120px;
+}
+
+.address {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+  direction: ltr;
+  display: inline-block;
+}
+
+.rowOut td {
+  color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-inline-end: 5px;
+  border-radius: 3px;
+  background: var(--color-accent-100);
+  border: 1px solid var(--color-accent-700);
+  vertical-align: baseline;
+}
+
+/* The address and, when there is one, the listing behind it. */
+.addressCell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listing {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid var(--color-divider);
+  color: var(--color-accent);
+  font-size: 11px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.listing:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.cellUrl {
+  direction: ltr;
+  text-align: left;
+  font-size: 12.5px;
+}
+
+.compUrl {
+  flex: 1;
+  min-width: 0;
+  border-color: var(--color-divider);
+}
+
+.include {
+  display: grid;
+  place-items: center;
+}
+
+.include input,
+.compToggle input {
+  accent-color: var(--color-accent);
+  width: 15px;
+  height: 15px;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.remove {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--color-divider);
+  border-radius: 50%;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.remove:hover {
+  border-color: var(--color-accent-700);
+  color: var(--color-accent-700);
+}
+
+.detailToggle {
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11.5px;
+}
+
+.detailToggle:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+  color: var(--color-text);
+}
+
+.detailRow td {
+  padding-top: 0;
+  background: color-mix(in srgb, var(--color-text) 3%, transparent);
+}
+
+/* A field grid, not a row of inline pairs: an inline <dd> is not a containing
+   block, so `.cellInput { width: 100% }` used to resolve against the <dl> and
+   every field demanded the whole row. Each field is now a block label over a
+   control the width of its own cell. */
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 16px;
+  padding: 10px 0 12px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.detailField > dt {
+  margin-bottom: 3px;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.detailField > dd {
+  margin: 0;
+}
+
+.detailField .cellInput,
+.detailField .cellSelect {
+  width: 100%;
+  border-color: var(--color-divider);
+}
+
+/* A field that needs the whole row — a URL, not a number. */
+.detailWide {
+  grid-column: 1 / -1;
+}
+
+.detailPair {
+  white-space: nowrap;
+}
+
+/* Beds over baths: two digits and a slash, kept out of the RTL flow so 5/3
+   does not come back as 3/5. */
+.unitCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  direction: ltr;
+}
+
+.footRow td {
+  border: 0;
+  padding-top: 10px;
+  font-weight: 600;
+}
+
+.empty {
+  padding: 28px 9px;
+  text-align: center;
+}
+
+.tableActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0 2px;
+  flex-wrap: wrap;
+}
+
+.addComp {
+  align-self: flex-start;
+  font-size: 12.5px;
+  border-style: dashed;
+}
+
+.cellInput {
+  width: 100%;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+}
+
+.cellInput:hover {
+  border-color: var(--color-divider);
+}
+
+.cellInput:focus {
+  border-color: var(--color-accent);
+  background: var(--color-bg);
+  outline: none;
+}
+
+.cellNum {
+  direction: ltr;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.cellAddress {
+  direction: ltr;
+  text-align: left;
+  font-weight: 600;
+}
+
+.scroll .cellAddress {
+  min-width: 190px;
+}
+
+.cellSelect {
+  appearance: auto;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+}
+
+.cellSelect:hover {
+  border-color: var(--color-divider);
+}
+
+/* A value that differs from the property being priced. Declared after the two
+   control classes, whose `background: transparent` would otherwise win.
+   Colour never carries it alone: every marked value also has a title and an
+   aria-label naming the subject's own figure, and the table has a legend. */
+.off,
+input.off,
+select.off {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+  font-weight: 600;
+}
+
+/* ── the subject card ── */
+.subjectCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.subjectTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 12.5px;
+}
+
+.factPair {
+  white-space: nowrap;
+}
+
+.subjectFields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.subLabel {
+  font-size: 12px;
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.urlInput {
+  direction: ltr;
+  text-align: left;
+  font-size: 12.5px;
+  min-width: 0;
+  flex: 1;
+}
+
+.overrideRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.overrideRow > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.resetOverride {
+  flex: none;
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
+/* ── phone cards ── */
+.mobileList {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compCard {
+  padding: 12px 14px;
+  gap: 6px;
+}
+
+.compHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.compMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-size: 12px;
+}
+
+/* Bounded, or a 100%-wide field pushes the label beside it off the row. */
+.compMeta .cellInput {
+  width: 92px;
+  border-color: var(--color-divider);
+}
+
+.compHead .cellInput {
+  min-width: 0;
+}
+
+.compFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.compToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+/* ── save bar (phone) ── */
+.saveBar {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .page {
+    padding-top: 16px;
+    gap: 14px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .summary {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .circleArv {
+    align-self: center;
+    width: 168px;
+    height: 168px;
+  }
+
+  .circleValue {
+    font-size: 31px;
+  }
+
+  .tableCard {
+    display: none;
+  }
+
+  .mobileList {
+    display: flex;
+  }
+
+  .track {
+    height: 58px;
+    margin-inline: 14px;
+  }
+
+  .saveBar {
+    position: fixed;
+    inset-inline: 12px;
+    bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 8px);
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px 10px 18px;
+    border-radius: 999px;
+    background: var(--color-neutral-900);
+    color: #fff;
+    font-size: 13px;
+    box-shadow: var(--shadow-lg);
+  }
+}

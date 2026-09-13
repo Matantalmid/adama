@@ -1,0 +1,302 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.breadcrumb {
+  font-size: 12.5px;
+}
+
+.breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-accent);
+}
+
+.separator {
+  margin: 0 6px;
+}
+
+/* ── hero ── */
+.hero {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+.heroPhoto {
+  height: 260px;
+}
+
+.heroBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* An English street address stays left-to-right but sits on the right edge of
+   an RTL page — the heading is the one place the two rules meet. */
+.title {
+  margin: 0;
+  font-size: 40px;
+  direction: ltr;
+  text-align: right;
+}
+
+.subtitle {
+  font-size: 14px;
+  margin-top: -6px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.stat {
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: var(--color-surface);
+}
+
+.statArv {
+  background: var(--color-accent-2-200);
+  color: var(--color-accent-2-900);
+}
+
+.statMao {
+  background: var(--color-accent-100);
+  color: var(--color-accent-900);
+}
+
+.statLabel {
+  font-size: 11px;
+}
+
+.statValue {
+  font-family: var(--font-heading);
+  font-size: 20px;
+}
+
+.statNote {
+  font-size: 10.5px;
+}
+
+/* ── tabs ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-divider);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  padding: 10px 16px;
+  font-size: 14px;
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tabActive {
+  font-weight: 600;
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.tabDisabled {
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  cursor: default;
+}
+
+/* ── body ── */
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.outcomes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.outcome {
+  padding: 16px 18px;
+  gap: 4px;
+}
+
+.outcomeWinner {
+  background: var(--color-accent-2-200);
+  color: var(--color-accent-2-900);
+}
+
+.outcomeValue {
+  font-size: 24px;
+}
+
+.outcomeNote {
+  font-size: 12px;
+  margin: 0;
+}
+
+.compareLink {
+  font-size: 13px;
+  align-self: flex-start;
+}
+
+/* ── mobile (mockup 2c) ── */
+.mobileBar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0 8px;
+}
+
+.mobileBarTitle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mobileTiles {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mobileActions {
+  display: none;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.mobileActions > * {
+  flex: 1;
+}
+
+/* Sections that exist only in the phone layout (2c). */
+.mobileOnly {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.desktopOnly {
+  display: contents;
+}
+
+@media (max-width: 1023px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .page {
+    gap: 14px;
+  }
+
+  .breadcrumb,
+  .stats,
+  .outcomes,
+  .compareLink,
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileBar,
+  .mobileActions,
+  .mobileOnly {
+    display: flex;
+  }
+
+  /* The phone layout leads with the rehab summary and the two actions; the
+     desktop panels below it stay available underneath. */
+  .body {
+    order: 1;
+  }
+
+  .mobileTiles {
+    display: grid;
+  }
+
+  .heroPhoto {
+    height: 170px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 12.5px;
+    margin-top: 0;
+  }
+
+  .heroBody {
+    gap: 6px;
+  }
+}
+
+/* The breadcrumb and the page's own actions share a line. The actions are
+   desktop-only — on the phone they live in .mobileBar. */
+.crumbRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+.headerActions .btn {
+  font-size: 13px;
+}
+
+@media (max-width: 899px) {
+  .headerActions {
+    display: none;
+  }
+}

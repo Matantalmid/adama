@@ -1,0 +1,118 @@
+@import "../styles/organic.css";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   App layer — everything the Organic system needs in order to work in a
+   Hebrew, right-to-left product. Kept out of organic.css so the design
+   system can be re-synced from the handoff bundle without losing this.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Caprasimo and Figtree have no Hebrew coverage. Secular One (display) and
+     Assistant (text) carry the Hebrew; Latin runs — addresses, ARV, $ — keep
+     falling through to the original faces, which is the effect the mockups
+     were designed around. */
+  --font-body: "Figtree", "Assistant", system-ui, sans-serif;
+  --font-heading: "Caprasimo", "Secular One", system-ui, sans-serif;
+
+  /* Chrome heights the screens lay themselves out against. */
+  --topbar-h: 61px;
+  --tabbar-h: 76px;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a:hover { color: var(--color-accent-700); }
+
+/* — RTL corrections to the design system —
+   The system's components use a few physical properties that flip wrong in
+   RTL. Correcting them here rather than in organic.css keeps that file a
+   faithful copy. */
+[dir="rtl"] .table th { text-align: right; }
+.nav-brand { margin-right: 0; margin-inline-end: auto; }
+.seg-opt + .seg-opt { border-left: 0; border-inline-start: 1px solid var(--color-divider); }
+
+/* — numerals and Latin runs —
+   Isolating every number, price and street address stops the bidi algorithm
+   from reordering them inside Hebrew sentences ("4412 Elm Ave" must not come
+   out as "Elm Ave 4412"). */
+.num {
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+}
+
+/* Small controls should never wrap mid-label or get squeezed by a flex parent. */
+.tag, .seg, .seg-opt { white-space: nowrap; flex: none; }
+
+/* The design system's .card sets its own padding/gap; screens that need a
+   different rhythm say so locally rather than fighting the base class. */
+
+/* — shared primitives —
+   Used by more than one screen, so they live here instead of in a module. */
+.meter {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-neutral-300);
+  overflow: hidden;
+}
+.meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+.meter-over > span { background: var(--color-accent-700); }
+.meter-done > span { background: var(--color-accent-2); }
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+.stat {
+  font-family: var(--font-heading);
+  line-height: 1;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* A destructive action. The design system has primary, secondary and ghost;
+   nothing in the handoff deletes anything, so this is the app's own. */
+.btn-danger {
+  border-color: color-mix(in srgb, var(--color-accent-700) 45%, transparent);
+  color: var(--color-accent-700);
+}
+
+.btn-danger:hover:not(:disabled) {
+  border-color: var(--color-accent-700);
+  background: color-mix(in srgb, var(--color-accent-700) 12%, transparent);
+}
+
+.btn-danger:active:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent-700) 20%, transparent);
+}

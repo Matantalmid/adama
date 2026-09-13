@@ -1,0 +1,260 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── desktop header ── */
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header h1 {
+  margin: 0 0 4px;
+  font-size: 36px;
+}
+
+.headerMeta {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ── mobile header (mockup 1c) ── */
+.mobileHeader {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+}
+
+.mobileHeader h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-accent-2-300);
+  color: var(--color-accent-2-900);
+  font-weight: 700;
+}
+
+/* ── KPI tiles ── */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.kpi {
+  padding: 18px 22px;
+}
+
+.kpiValue {
+  font-size: 34px;
+}
+
+.kpiAccent {
+  background: var(--color-accent-100);
+}
+
+/* ── main two-column body ── */
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.tableCard {
+  padding: 8px 20px 12px;
+  gap: 0;
+}
+
+.tableHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 6px;
+}
+
+.tableHead h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sideCard {
+  padding: 18px 20px;
+}
+
+.sideTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sideTitle h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.attentionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.attentionItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--color-neutral-500);
+}
+
+.dotUrgent {
+  background: var(--color-accent);
+}
+
+.flipCard {
+  padding: 18px 20px;
+  background: var(--color-accent-2-200);
+}
+
+.flipValue {
+  font-size: 28px;
+}
+
+.flipNote {
+  font-size: 12.5px;
+  color: var(--color-accent-2-900);
+  margin: 0;
+}
+
+/* ── mobile-only pieces ── */
+.mobileAlert {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 22px;
+  background: var(--color-accent-100);
+  color: var(--color-text);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.mobileAlert svg:first-child {
+  color: var(--color-accent-700);
+  flex: none;
+}
+
+.mobileAlertText {
+  flex: 1;
+}
+
+.mobileList {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobileListHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.mobileListHead h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Horizontally scrolling KPI strip — phones only. */
+.kpiRail {
+  display: none;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.kpiRail::-webkit-scrollbar {
+  display: none;
+}
+
+.kpiRail > * {
+  scroll-snap-align: start;
+}
+
+.railCard {
+  min-width: 150px;
+  padding: 14px 16px;
+  gap: 4px;
+}
+
+.railValue {
+  font-size: 26px;
+}
+
+@media (max-width: 1023px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 899px) {
+  .page {
+    gap: 18px;
+  }
+
+  .header,
+  .kpis,
+  .tableCard,
+  .side {
+    display: none;
+  }
+
+  .mobileHeader,
+  .mobileList {
+    display: flex;
+  }
+
+  .mobileAlert {
+    display: flex;
+  }
+
+  /* The KPI rail bleeds to both edges, as on the phone mockup. */
+  .kpiRail {
+    display: flex;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+}
