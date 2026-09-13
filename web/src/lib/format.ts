@@ -54,6 +54,11 @@ export function percent(value: number, digits = 0): string {
   return `${value.toFixed(digits)}%`;
 }
 
+/** $183/sqft, or $192.60/sqft when the cents are the point. */
+export function pricePerSqft(value: number, digits = 0): string {
+  return `$${value.toFixed(digits)}/sqft`;
+}
+
 /** 1,240 sqft */
 export function sqft(value: number): string {
   return `${plain.format(value)} sqft`;

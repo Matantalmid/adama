@@ -12,7 +12,7 @@ export function PropertyTabs({
   expenseCount,
 }: {
   propertyId: string;
-  active: "overview" | "calculator";
+  active: "overview" | "expenses" | "calculator" | "arv";
   expenseCount: number;
 }) {
   const tab = (isActive: boolean) => `${styles.tab}${isActive ? ` ${styles.tabActive}` : ""}`;
@@ -22,7 +22,11 @@ export function PropertyTabs({
       <Link href={`/properties/${propertyId}`} className={tab(active === "overview")} aria-current={active === "overview" ? "page" : undefined}>
         סקירה
       </Link>
-      <Link href={`/properties/${propertyId}/expenses`} className={tab(false)}>
+      <Link
+        href={`/properties/${propertyId}/expenses`}
+        className={tab(active === "expenses")}
+        aria-current={active === "expenses" ? "page" : undefined}
+      >
         הוצאות{" "}
         <Tag tone="neutral" style={{ fontSize: 10, padding: "1px 7px", marginInlineStart: 4 }}>
           <Num>{expenseCount}</Num>
@@ -31,7 +35,11 @@ export function PropertyTabs({
       <Link href={`/properties/${propertyId}/calculator`} className={tab(active === "calculator")} aria-current={active === "calculator" ? "page" : undefined}>
         BRRRR / Flip
       </Link>
-      <Link href="/arv" className={tab(false)}>
+      <Link
+        href={`/properties/${propertyId}/arv`}
+        className={tab(active === "arv")}
+        aria-current={active === "arv" ? "page" : undefined}
+      >
         Comps &amp; ARV
       </Link>
       <span className={`${styles.tab} ${styles.tabDisabled}`} title="בסבב הבא">

@@ -1,4 +1,4 @@
-import type { Expense, Property } from "@/data/types";
+import type { CompsAnalysis, Expense, Property } from "@/data/types";
 import { applyInputsToProperty, type DealAssumptions, type DealInputs } from "@/lib/calc";
 
 import { migrate, seedState, type StoreState } from "./schema";
@@ -143,6 +143,22 @@ export const actions = {
     setState((s) => ({
       ...s,
       properties: updateProperty(s.properties, propertyId, (p) => applyInputsToProperty(p, inputs)),
+    }));
+  },
+
+  /**
+   * The comps workup behind a property's ARV. Deliberately does not touch
+   * `property.arv` — the comps screen reports its own figure and the deal
+   * calculator keeps the one it was given.
+   */
+  saveComps(propertyId: string, analysis: CompsAnalysis): void {
+    setState((s) => ({
+      ...s,
+      properties: updateProperty(s.properties, propertyId, (p) => ({
+        ...p,
+        compsAnalysis: analysis,
+        compCount: analysis.comps.length,
+      })),
     }));
   },
 

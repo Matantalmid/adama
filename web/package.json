@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test scripts/calc.test.ts"
+    "test": "node --test scripts/calc.test.ts scripts/comps.test.ts"
   },
   "dependencies": {
     "next": "^16.3.5",

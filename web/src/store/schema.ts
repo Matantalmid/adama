@@ -7,7 +7,7 @@ import { builtInAssumptions, type DealAssumptions } from "@/lib/calc";
  * their assumptions and rehab categories, and the expense ledger. Portfolio
  * summary, attention items and the ledger header totals are still static.
  */
-export const STORE_VERSION = 2 as const;
+export const STORE_VERSION = 3 as const;
 export const STORAGE_KEY = "adama.store";
 
 export interface StoreState {
@@ -31,7 +31,7 @@ export function seedState(): StoreState {
 /**
  * Accept stored state only when it is the current shape. This is demo data,
  * so a version mismatch reseeds rather than migrates — bump STORE_VERSION
- * whenever `assumptions` or the seed changes shape.
+ * whenever `assumptions`, `compsAnalysis` or the seed changes shape.
  */
 export function migrate(raw: unknown): StoreState | null {
   if (!raw || typeof raw !== "object") return null;

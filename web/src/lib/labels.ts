@@ -1,4 +1,4 @@
-import type { PropertyStage, Strategy } from "@/data/types";
+import type { CompCondition, CompStatus, GarageKind, PropertyStage, Strategy } from "@/data/types";
 
 type TagTone = "accent" | "accent-2" | "neutral" | "outline";
 
@@ -31,3 +31,25 @@ export const financingLabels = {
   dscr: "DSCR",
   cash: "מזומן בלבד",
 } as const;
+
+/** The comps sheet's own four finish levels, in the order it lists them. */
+export const conditionLabels: Record<CompCondition, string> = {
+  turnkey: "משופץ קומפלט",
+  top: "משופץ יוקרתי",
+  full: "משופץ מלא",
+  partial: "משופץ חלקי",
+};
+
+export const conditionOrder: CompCondition[] = ["turnkey", "top", "full", "partial"];
+
+export const compStatusLabels: Record<CompStatus, string> = {
+  sold: "נמכר",
+  pending: "בתהליך",
+  active: "בשוק",
+};
+
+export const garageLabels: Record<GarageKind, string> = {
+  none: "ללא גראז'",
+  one: "גראז' ל-1 רכב",
+  two: "גראז' ל-2 רכבים",
+};

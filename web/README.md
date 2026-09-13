@@ -34,13 +34,14 @@ the screens can change things.
 | Property overview | `/properties/[id]` | 2a desktop, 2c phone |
 | Project expenses | `/properties/[id]/expenses` | 3a desktop, phone list |
 | **BRRRR vs Fix & Flip calculator** | `/calculators`, `/properties/[id]/calculator` | 2b's matrix and circles; formulas from the spreadsheet |
+| **Comps & ARV** | `/arv`, `/properties/[id]/arv` | the "Comps & ARV Calculator" sheet |
 | **Deal defaults** | `/defaults` | the values every new deal starts from |
 | New expense — scanned or manual | phone camera button; "+ הוצאה" on the ledger | 3c |
 
 Not yet built, because they were not designed: property comparison (six axes
-including a map), the ARV/comps finder, and the add‑property form. Their routes
-(`/compare`, `/arv`, `/more`, `/properties/new`) say so rather than leaving the
-navigation pointing at dead links. Still inert on the built screens: the
+including a map) and the add‑property form. Their routes (`/compare`, `/more`,
+`/properties/new`) say so rather than leaving the navigation pointing at dead
+links. Still inert on the built screens: the
 dashboard's period segment, "ייצא CSV", the ledger's view segment, search,
 "מסמכים", "עוד".
 
@@ -156,6 +157,45 @@ property is a marginal hold and a strong flip**, the opposite of the mockup's
 reproduce the mockup; the assumptions are one tap away if the investor
 disagrees with a default.
 
+## Where the ARV comes from
+
+`/arv` is the investor's second sheet, " Comps & ARV Calculator" — a subject
+property, the comparable sales under it, and the four figures they add up to.
+`src/lib/comps.ts` is its arithmetic and `scripts/comps.test.ts` pins both of
+its tabs.
+
+The chain is short: a comp's price per square foot is its sale price over its
+size; the average of those, **rounded to one decimal**, is the rate the subject
+is priced at; that rate times the subject's size is the ARV; and the 70% rule
+turns the ARV into a maximum offer, less a flat rehab estimate. The rounding is
+not cosmetic — 188 Kendall Ave averages 192.5795 → 192.6 → ×1,800 = $346,680
+and 123 Olancha Ave averages 138.5267 → 138.5 → ×3,000 = $415,500. Both land
+exactly; rounding the ARV instead lands neither.
+
+**A comp can sit out of the rate.** On the Olancha tab, 9 Elton St has a price
+and a size but an empty `$/SqFt` cell, so it counts toward the median sale price
+and not toward the average. Rather than reproduce a hole in a formula, every
+comp carries an "in the average" toggle — from the table or by clicking its dot
+on the spread strip — and that comp is seeded off.
+
+**The screen does not write the ARV.** It reports $346,680 for Kendall Ave while
+the deal calculator keeps the $330,000 it was given, and says so in a line under
+the circles. The two sheets are two opinions; the app does not silently pick
+one. The subject card owns the asking price and the rehab *estimate* for the
+same reason — the comps tab and the deal tab disagree on both, on purpose — and
+reads the house's own facts off the property so there is one copy of them.
+
+### The spread strip
+
+The average alone hides a wide spread: Kendall's comps run from $151 to $228 a
+foot. The strip puts every comp on that axis as a dot, with the rate the ARV is
+taken at marked in the accent and the median as a quiet tick. It is an
+**emphasis** chart — one figure in colour, the rest in de-emphasis gray — so
+nothing rests on telling two hues apart; a comp out of the average is *hollow*
+rather than a different shade, only the two extremes are labelled, and whatever
+the pointer is on is named in a line underneath rather than in a floating
+tooltip that could overflow the card. Clicking a dot takes that comp in or out.
+
 ## State
 
 `src/store/` is a small localStorage store: one immutable state object,
@@ -166,8 +206,11 @@ components that take an id and read the store. Actions: `addExpense`,
 `setExpenseCategory`, `raiseCategoryBudget`, `saveDealInputs`, `resetToSeed`.
 A categorised amount moves the category's spend and the property's rehab
 spend together, keeping the seed's invariant that the categories sum to the
-rehab spent. A version mismatch reseeds — bump `STORE_VERSION` when the shape
-of `assumptions` changes.
+rehab spent. Actions: `addExpense`, `setExpenseCategory`,
+`raiseCategoryBudget`, `saveDealInputs`, `saveDefaults`, `saveComps`,
+`resetToSeed`. A version mismatch reseeds — bump `STORE_VERSION` when the shape
+of `assumptions` or `compsAnalysis` changes, and note that doing so discards
+whatever the browser had saved.
 
 One consequence worth knowing before you write a screen: because the seed is
 what React renders during hydration and the stored state arrives a beat later,
@@ -186,12 +229,13 @@ src/
     property/        overview, tabs, budget-vs-actual, BRRRR timeline
     expenses/        ledger with filters, new-expense sheet, category chips
     calculator/      assumptions form, scenario matrix, ARV circles, defaults screen
+    comps/           subject card, comps table, ARV summary, $/SqFt spread strip
     ui/              Num, Tag, Meter, Segmented, Icon, PhotoFrame, RichText, InfoTip
   data/              types + seed data from the mockups
-  lib/               calc.ts (the spreadsheet), glossary.ts (its notes), deal.ts, format, labels
+  lib/               calc.ts + comps.ts (the two spreadsheets), glossary.ts, deal.ts, format, labels
   store/             localStorage store and hooks
   styles/organic.css the design system, copied verbatim from the handoff
-scripts/calc.test.ts the spreadsheet's totals as tests
+scripts/            calc.test.ts and comps.test.ts — both sheets' totals as tests
 preview/             esbuild bundle of the same app with hash routing, for the review artifact
 ```
 
@@ -234,7 +278,7 @@ stay in the original faces — the arrangement the mockups were designed around.
 
 ## Data
 
-`src/data/portfolio.ts` holds six sample properties with their assumptions,
+`src/data/portfolio.ts` holds eight sample properties with their assumptions,
 one property's rehab budget broken into seven categories, eight of the
 ledger's 42 expenses, and the portfolio summary. It is the seed the store
 starts from; edits live in the browser's localStorage until a backend exists.

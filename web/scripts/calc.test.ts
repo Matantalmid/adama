@@ -226,3 +226,25 @@ describe("Elm Ave seed — anchors the mockups fix", () => {
     near(flip.allInExFinancing, 127_401);
   });
 });
+
+describe("123 Olancha Ave seed — its own tab of מחשבון עסקה", () => {
+  const property = getProperty("olancha-ave");
+  assert.ok(property);
+  const flip = evaluateFlip(inputsFromProperty(property));
+
+  it("points $4,435, closing $6,919.40, holding $17,983 over eight months", () => {
+    near(flip.points, 4_435);
+    near(flip.closing, 6_919.4, 0.01);
+    near(flip.rehabInterest, 14_783);
+    near(flip.holding, 17_983);
+  });
+  it("selling $27,200 and MAO $94,250", () => {
+    near(flip.selling, 27_200);
+    assert.equal(flip.mao, 94_250);
+  });
+  it("total investment $71,338, profit $19,712, ROI 27.63%", () => {
+    near(flip.totalInvestment, 71_338);
+    near(flip.netProfit, 19_712);
+    near(flip.roiPct, 27.63, 0.01);
+  });
+});

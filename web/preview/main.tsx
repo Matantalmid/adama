@@ -11,6 +11,7 @@ import MorePage from "@/app/more/page";
 import NewPropertyPage from "@/app/properties/new/page";
 
 import { CalculatorScreen } from "@/components/calculator/CalculatorScreen";
+import { CompsScreen } from "@/components/comps/CompsScreen";
 import { ExpensesScreen } from "@/components/expenses/ExpensesScreen";
 import { AppShell } from "@/components/layout/AppShell";
 import { PropertyScreen } from "@/components/property/PropertyScreen";
@@ -56,6 +57,18 @@ function Router() {
       return (
         <AppShell>
           <CalculatorScreen propertyId={property.id} />
+        </AppShell>
+      );
+    }
+  }
+
+  const arvMatch = path.match(/^\/properties\/([^/]+)\/arv$/);
+  if (arvMatch) {
+    const property = getProperty(arvMatch[1]);
+    if (property) {
+      return (
+        <AppShell>
+          <CompsScreen propertyId={property.id} />
         </AppShell>
       );
     }

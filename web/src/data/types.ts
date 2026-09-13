@@ -39,6 +39,67 @@ export interface RehabCategory {
   complete?: boolean;
 }
 
+/** Where a comparable sale stands. The sheet only ever records "Sold". */
+export type CompStatus = "sold" | "pending" | "active";
+
+/**
+ * How finished a house is — the sheet's own four levels, used both for a comp
+ * and for the finish level planned for the subject property.
+ */
+export type CompCondition = "turnkey" | "top" | "full" | "partial";
+
+export type GarageKind = "none" | "one" | "two";
+
+/** One comparable sale, as the "Comps & ARV Calculator" sheet records it. */
+export interface Comparable {
+  id: string;
+  status: CompStatus;
+  /** Street address — LTR, never translated. */
+  address: string;
+  distanceMi?: number;
+  beds?: number;
+  baths?: number;
+  sqft: number;
+  lotSqft?: number;
+  parking?: number;
+  garage?: GarageKind;
+  yearBuilt?: number;
+  salePrice?: number;
+  /** ISO date of the sale. */
+  saleDate?: string;
+  /** Days on market. */
+  domDays?: number;
+  condition?: CompCondition;
+  /**
+   * Kept out of the $/SqFt average — a comp too far from the subject to price
+   * it. It still counts toward the median sale price, the way the sheet does.
+   */
+  excluded?: boolean;
+}
+
+/**
+ * The comps workup behind a property's ARV: the subject card the sheet heads
+ * each tab with, and the comparable sales under it.
+ *
+ * Deliberately separate from the deal calculator. The two sheets disagree on
+ * purpose — the comps tab carries the asking price and an early rehab estimate,
+ * the deal tab carries what was actually negotiated — so this owns those two
+ * and reads the house's facts (address, beds, baths, SqFt, year) off `Property`.
+ */
+export interface CompsAnalysis {
+  /** מחיר מבוקש נוכחי — what the seller is asking, not what will be paid. */
+  askingPrice: number;
+  /** תקציב שיפוץ מוערך — the estimate at comps stage, before underwriting. */
+  rehabEstimate: number;
+  lotSqft?: number;
+  garage?: GarageKind;
+  /** רמת גימור מתוכננת — which comps the subject should be priced against. */
+  plannedCondition?: CompCondition;
+  /** The investor's own $/SqFt, when they disagree with the comps' average. */
+  pricePerSqftOverride?: number;
+  comps: Comparable[];
+}
+
 export interface Property {
   id: string;
   /** Street address — always rendered LTR, never translated. */
@@ -67,6 +128,8 @@ export interface Property {
   arv: number;
   /** How many comparable sales back the ARV. */
   compCount?: number;
+  /** The comps workup behind the ARV — the "Comps & ARV Calculator" sheet. */
+  compsAnalysis?: CompsAnalysis;
 
   /**
    * Summary of the purchase financing, for tags and the dashboard. Mirrored

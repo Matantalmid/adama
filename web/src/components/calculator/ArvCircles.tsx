@@ -1,6 +1,6 @@
 import { Num } from "@/components/ui/Num";
 import type { DealInputs, ScenarioComparison } from "@/lib/calc";
-import { money, moneyCompact, percent } from "@/lib/format";
+import { money, moneyCompact, percent, pricePerSqft } from "@/lib/format";
 
 import styles from "./Calculator.module.css";
 
@@ -28,7 +28,7 @@ export function ArvCircles({
         <Num className={styles.circleValue}>{moneyCompact(inputs.arv)}</Num>
         <div className={styles.circleMeta}>
           {compCount ? <><Num>{`${compCount} comps`}</Num> · </> : null}
-          {sqft ? <Num>{`$${Math.round(inputs.arv / sqft)}/sqft`}</Num> : null}
+          {sqft ? <Num>{pricePerSqft(inputs.arv / sqft)}</Num> : null}
         </div>
       </div>
 
